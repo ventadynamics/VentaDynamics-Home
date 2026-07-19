@@ -270,12 +270,7 @@ class Component extends DCLogic {
     ["#0f172a", "#1b17ff", "#38bdf8", "#020617"],
     ["#1b17ff", "#4338ca", "#3730a3", "#04030f"],
   ];
-  function startHeroGradient() {
-    const canvas = document.querySelector("#hero-gradient-canvas");
-    if (!canvas) {
-      requestAnimationFrame(startHeroGradient);
-      return;
-    }
+  function makeGradient(canvas) {
     const palette = HERO_PALETTES[Math.floor(Math.random() * HERO_PALETTES.length)];
     canvas.style.setProperty("--gradient-color-1", palette[0]);
     canvas.style.setProperty("--gradient-color-2", palette[1]);
@@ -287,11 +282,25 @@ class Component extends DCLogic {
     gradient.freqY = (14 + Math.random() * 20) * 1e-5;
     gradient.seed = Math.floor(Math.random() * 100);
     gradient.initGradient("#hero-gradient-canvas");
+    return gradient;
+  }
+
+  function startHeroGradient(canvas, attempt) {
+    attempt = attempt || 0;
+    // A same-tab reload can briefly leave the previous WebGL context not
+    // yet released by the GPU driver, so context creation can fail the
+    // first try right after Ctrl+R. Retry a few times before giving up.
+    const testCtx = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (!testCtx && attempt < 5) {
+      setTimeout(() => startHeroGradient(canvas, attempt + 1), 200);
+      return;
+    }
+    const gradient = makeGradient(canvas);
     canvas.addEventListener("webglcontextlost", (event) => {
       event.preventDefault();
     });
     canvas.addEventListener("webglcontextrestored", () => {
-      new Gradient().initGradient("#hero-gradient-canvas");
+      makeGradient(canvas);
     });
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
@@ -301,7 +310,15 @@ class Component extends DCLogic {
       io.observe(canvas);
     }
   }
-  startHeroGradient();
+  function boot() {
+    const canvas = document.querySelector("#hero-gradient-canvas");
+    if (!canvas) {
+      requestAnimationFrame(boot);
+      return;
+    }
+    startHeroGradient(canvas);
+  }
+  boot();
 </script>
 <script>
 (async () => {
