@@ -254,14 +254,10 @@ class Component extends DCLogic {
     } else {
       ids.forEach(reveal);
     }
-
-    // Safety net so content is never stuck invisible if observation fails for any reason.
-    this._fallback = setTimeout(() => ids.forEach(reveal), 1800);
   }
 
   componentWillUnmount() {
     if (this._io) this._io.disconnect();
-    if (this._fallback) clearTimeout(this._fallback);
   }
 
   renderVals() {
