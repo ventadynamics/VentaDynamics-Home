@@ -263,13 +263,29 @@ class Component extends DCLogic {
 </script>
 <script type="module">
   import { Gradient } from "./assets/gradient.js";
+  const HERO_PALETTES = [
+    ["#1b17ff", "#4b48ff", "#7a5cff", "#05061a"],
+    ["#0a0a5c", "#1b17ff", "#4b48ff", "#03040f"],
+    ["#1b17ff", "#6d28d9", "#9333ea", "#050014"],
+    ["#0f172a", "#1b17ff", "#38bdf8", "#020617"],
+    ["#1b17ff", "#4338ca", "#3730a3", "#04030f"],
+  ];
   function startHeroGradient() {
     const canvas = document.querySelector("#hero-gradient-canvas");
     if (!canvas) {
       requestAnimationFrame(startHeroGradient);
       return;
     }
+    const palette = HERO_PALETTES[Math.floor(Math.random() * HERO_PALETTES.length)];
+    canvas.style.setProperty("--gradient-color-1", palette[0]);
+    canvas.style.setProperty("--gradient-color-2", palette[1]);
+    canvas.style.setProperty("--gradient-color-3", palette[2]);
+    canvas.style.setProperty("--gradient-color-4", palette[3]);
     const gradient = new Gradient();
+    gradient.amp = 280 + Math.random() * 220;
+    gradient.freqX = (10 + Math.random() * 12) * 1e-5;
+    gradient.freqY = (14 + Math.random() * 20) * 1e-5;
+    gradient.seed = Math.floor(Math.random() * 100);
     gradient.initGradient("#hero-gradient-canvas");
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
