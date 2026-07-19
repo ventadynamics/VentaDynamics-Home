@@ -160,8 +160,8 @@
         </div>
       </div>
     </div>
-    <button type="button" id="work-prev" aria-label="Предыдущий проект" style="position:absolute;top:50%;left:16px;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(10,10,10,0.15);background:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0a0a0a;transition:background .2s ease,color .2s ease;z-index:2;">←</button>
-    <button type="button" id="work-next" aria-label="Следующий проект" style="position:absolute;top:50%;right:16px;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(10,10,10,0.15);background:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0a0a0a;transition:background .2s ease,color .2s ease;z-index:2;">→</button>
+    <a href="javascript:void(0)" id="work-prev" aria-label="Предыдущий проект" style="position:absolute;top:50%;left:16px;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(10,10,10,0.15);background:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0a0a0a;transition:background .2s ease,color .2s ease;z-index:2;">←</a>
+    <a href="javascript:void(0)" id="work-next" aria-label="Следующий проект" style="position:absolute;top:50%;right:16px;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(10,10,10,0.15);background:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0a0a0a;transition:background .2s ease,color .2s ease;z-index:2;">→</a>
     </div>
   </section>
 
@@ -406,21 +406,29 @@ class Component extends DCLogic {
     let dragStartX = 0;
     let dragStartScroll = 0;
     let moved = false;
-    track.addEventListener("pointerdown", (event) => {
-      if (event.pointerType !== "mouse") return;
-      isDown = true;
-      moved = false;
-      dragStartX = event.clientX;
-      dragStartScroll = track.scrollLeft;
-      track.style.cursor = "grabbing";
-      track.style.scrollSnapType = "none";
-    });
-    window.addEventListener("pointermove", (event) => {
-      if (!isDown) return;
-      const dx = event.clientX - dragStartX;
-      if (Math.abs(dx) > 4) moved = true;
-      track.scrollLeft = dragStartScroll - dx;
-    });
+    track.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.pointerType !== "mouse") return;
+        isDown = true;
+        moved = false;
+        dragStartX = event.clientX;
+        dragStartScroll = track.scrollLeft;
+        track.style.cursor = "grabbing";
+        track.style.scrollSnapType = "none";
+      },
+      { capture: true }
+    );
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        if (!isDown) return;
+        const dx = event.clientX - dragStartX;
+        if (Math.abs(dx) > 4) moved = true;
+        track.scrollLeft = dragStartScroll - dx;
+      },
+      { capture: true }
+    );
     const endDrag = () => {
       if (!isDown) return;
       isDown = false;
@@ -443,8 +451,8 @@ class Component extends DCLogic {
     const step = () => cards[0].getBoundingClientRect().width + 32;
     const prevBtn = document.querySelector("#work-prev");
     const nextBtn = document.querySelector("#work-next");
-    if (prevBtn) prevBtn.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
-    if (nextBtn) nextBtn.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: -step(), behavior: "smooth" }); });
+    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: step(), behavior: "smooth" }); });
   }
 
   const booted = new Set();
