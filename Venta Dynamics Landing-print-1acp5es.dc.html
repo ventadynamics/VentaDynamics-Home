@@ -32,10 +32,6 @@
     width: 100%;
     height: 100%;
     display: block;
-    --gradient-color-1: #05061a;
-    --gradient-color-2: #1b17ff;
-    --gradient-color-3: #a855f7;
-    --gradient-color-4: #22d3ee;
   }
   @media (prefers-reduced-motion: reduce) {
     #hero-gradient-canvas { display: none; }
@@ -262,22 +258,17 @@ class Component extends DCLogic {
 }
 </script>
 <script type="module">
-  import { Gradient } from "./assets/gradient.js";
+  import { initMetallicWaves } from "./assets/metallic-waves.js";
   function startHeroGradient() {
     const canvas = document.querySelector("#hero-gradient-canvas");
     if (!canvas) {
       requestAnimationFrame(startHeroGradient);
       return;
     }
-    const gradient = new Gradient();
-    gradient.amp = 220;
-    gradient.freqX = 22e-5;
-    gradient.freqY = 45e-5;
-    gradient.seed = 12;
-    gradient.initGradient("#hero-gradient-canvas");
-    if ("IntersectionObserver" in window) {
+    const waves = initMetallicWaves("#hero-gradient-canvas");
+    if (waves && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(
-        (entries) => entries.forEach((entry) => (entry.isIntersecting ? gradient.play() : gradient.pause())),
+        (entries) => entries.forEach((entry) => (entry.isIntersecting ? waves.play() : waves.pause())),
         { threshold: 0.05 }
       );
       io.observe(canvas);
