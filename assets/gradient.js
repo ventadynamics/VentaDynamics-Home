@@ -456,7 +456,9 @@ class Gradient {
       this.material = this.initMaterial(), this.geometry = new this.minigl.PlaneGeometry, this.mesh = new this.minigl.Mesh(this.geometry, this.material)
   }
   shouldSkipFrame(e) {
-      return !!window.document.hidden || (!this.conf.playing || (parseInt(e, 10) % 2 == 0 || void 0))
+      if (window.document.hidden || !this.conf.playing) return true;
+      if (this.last && e - this.last < 1000 / 40) return true;
+      return false;
   }
   updateFrequency(e) {
       this.freqX += e, this.freqY += e

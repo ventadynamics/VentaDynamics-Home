@@ -255,11 +255,20 @@ class Component extends DCLogic {
 <script type="module">
   import { Gradient } from "./assets/gradient.js";
   function startHeroGradient() {
-    if (!document.querySelector("#hero-gradient-canvas")) {
+    const canvas = document.querySelector("#hero-gradient-canvas");
+    if (!canvas) {
       requestAnimationFrame(startHeroGradient);
       return;
     }
-    new Gradient().initGradient("#hero-gradient-canvas");
+    const gradient = new Gradient();
+    gradient.initGradient("#hero-gradient-canvas");
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((entry) => (entry.isIntersecting ? gradient.play() : gradient.pause())),
+        { threshold: 0.05 }
+      );
+      io.observe(canvas);
+    }
   }
   startHeroGradient();
 </script>
