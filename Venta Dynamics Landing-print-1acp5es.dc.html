@@ -287,6 +287,12 @@ class Component extends DCLogic {
     gradient.freqY = (14 + Math.random() * 20) * 1e-5;
     gradient.seed = Math.floor(Math.random() * 100);
     gradient.initGradient("#hero-gradient-canvas");
+    canvas.addEventListener("webglcontextlost", (event) => {
+      event.preventDefault();
+    });
+    canvas.addEventListener("webglcontextrestored", () => {
+      new Gradient().initGradient("#hero-gradient-canvas");
+    });
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         (entries) => entries.forEach((entry) => (entry.isIntersecting ? gradient.play() : gradient.pause())),
