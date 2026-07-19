@@ -408,7 +408,10 @@ class Component extends DCLogic {
 
     layout();
     track.scrollLeft = 0; // with symmetric padding in place, this centers the first card
-    update();
+    // Wait two frames before the first scale pass: on initial load the
+    // browser hasn't necessarily settled the padding/scroll-position
+    // change yet, so measuring immediately under-scales the first card.
+    requestAnimationFrame(() => requestAnimationFrame(update));
 
     // Click-and-drag scrolling (mouse only; touch already scrolls natively).
     let isDown = false;
@@ -460,8 +463,32 @@ class Component extends DCLogic {
     const step = () => cards[0].getBoundingClientRect().width + 32;
     const prevBtn = document.querySelector("#work-prev");
     const nextBtn = document.querySelector("#work-next");
-    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: -step(), behavior: "smooth" }); });
-    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: step(), behavior: "smooth" }); });
+    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto(); track.scrollBy({ left: -step(), behavior: "smooth" }); scheduleAuto(); });
+    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto(); track.scrollBy({ left: step(), behavior: "smooth" }); scheduleAuto(); });
+
+    // Auto-advance every few seconds; pause on hover/drag so it never
+    // fights a visitor who's actively browsing the cases.
+    let autoTimer = null;
+    function pauseAuto() {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+    function scheduleAuto() {
+      pauseAuto();
+      autoTimer = setInterval(() => {
+        const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+        if (atEnd) track.scrollTo({ left: 0, behavior: "smooth" });
+        else track.scrollBy({ left: step(), behavior: "smooth" });
+      }, 4500);
+    }
+    track.addEventListener("mouseenter", pauseAuto);
+    track.addEventListener("mouseleave", scheduleAuto);
+    track.addEventListener("pointerdown", pauseAuto, { capture: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) pauseAuto();
+      else scheduleAuto();
+    });
+    scheduleAuto();
   }
 
   const booted = new Set();
