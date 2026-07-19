@@ -26,27 +26,19 @@
   body { margin: 0; }
   a { color: #1b17ff; text-decoration: none; }
   a:hover { color: #0a0a0a; }
-  .hero-bg {
+  #hero-gradient-canvas {
     position: absolute;
     inset: 0;
-    background-color: #05061a;
-    background-image:
-      repeating-linear-gradient(90deg, rgba(120,140,255,0) 0px, rgba(120,140,255,0.35) 1px, rgba(120,140,255,0) 3px, rgba(120,140,255,0) 22px),
-      radial-gradient(130% 110% at 6% 100%, rgba(75,72,255,0.95) 0%, rgba(43,39,220,0.55) 32%, rgba(5,6,26,0) 62%);
-    background-size: 22px 100%, 100% 100%;
-    background-repeat: repeat, no-repeat;
-    animation: heroRaysDrift 16s linear infinite, heroGlowPulse 9s ease-in-out infinite;
-  }
-  @keyframes heroRaysDrift {
-    from { background-position: 0 0, 0 0; }
-    to { background-position: -220px 0, 0 0; }
-  }
-  @keyframes heroGlowPulse {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.12); }
+    width: 100%;
+    height: 100%;
+    display: block;
+    --gradient-color-1: #1b17ff;
+    --gradient-color-2: #4b48ff;
+    --gradient-color-3: #7a5cff;
+    --gradient-color-4: #05061a;
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero-bg { animation: none; }
+    #hero-gradient-canvas { display: none; }
   }
 </style>
 </helmet>
@@ -66,7 +58,7 @@
 
   <section id="hero" style="position:relative;min-height:calc(100vh - 84px);display:flex;flex-direction:column;gap:48px;max-width:1400px;margin:0 auto;padding:0;border-bottom:1px solid rgba(10,10,10,0.12);scroll-margin-top:84px;overflow:hidden;">
     <div style="position:absolute;inset:clamp(24px,5vw,64px);border-radius:40px;overflow:hidden;z-index:0;">
-      <div class="hero-bg"></div>
+      <canvas id="hero-gradient-canvas"></canvas>
     </div>
     <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:40px;flex:1;justify-content:space-between;padding:calc(clamp(24px,5vw,64px) + 32px);">
       <h1 style="{{ heroStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 100ms,transform .7s cubic-bezier(.16,1,.3,1) 100ms;margin:0;font-size:clamp(36px,5.6vw,100px);font-weight:800;line-height:1.04;letter-spacing:-0.02em;text-transform:uppercase;color:#ffffff;max-width:920px;">Разработка, которой доверяют</h1>
@@ -268,6 +260,26 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script type="module">
+  import { Gradient } from "./assets/gradient.js";
+  function startHeroGradient() {
+    const canvas = document.querySelector("#hero-gradient-canvas");
+    if (!canvas) {
+      requestAnimationFrame(startHeroGradient);
+      return;
+    }
+    const gradient = new Gradient();
+    gradient.initGradient("#hero-gradient-canvas");
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((entry) => (entry.isIntersecting ? gradient.play() : gradient.pause())),
+        { threshold: 0.05 }
+      );
+      io.observe(canvas);
+    }
+  }
+  startHeroGradient();
 </script>
 <script>
 (async () => {
