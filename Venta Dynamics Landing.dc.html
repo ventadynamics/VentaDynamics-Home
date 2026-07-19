@@ -127,10 +127,10 @@
   <section id="work" style="min-height:calc(100vh - 84px);display:flex;flex-direction:column;justify-content:center;max-width:1400px;margin:0 auto;padding:clamp(64px,8vw,100px) clamp(24px,5vw,64px);border-bottom:1px solid rgba(10,10,10,0.12);scroll-margin-top:84px;">
     <div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">03 — Работы</div>
     <h2 style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">Избранные проекты</h2>
-    <div id="work-track" class="work-track" style="display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;padding:24px calc(50% - min(360px,42vw));-webkit-overflow-scrolling:touch;">
+    <div id="work-track" class="work-track" style="display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;padding:24px 24px;-webkit-overflow-scrolling:touch;">
       <div class="work-card" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;display:flex;flex-direction:column;gap:14px;">
         <div style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-fintech" shape="rect" placeholder="Скриншот интерфейса" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-fintech-01" shape="rect" placeholder="Скриншот интерфейса" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
         </div>
         <div>
           <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
@@ -140,7 +140,7 @@
       </div>
       <div class="work-card" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;display:flex;flex-direction:column;gap:14px;">
         <div style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-booking" shape="rect" placeholder="Скриншот приложения" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-booking-01" shape="rect" placeholder="Скриншот приложения" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
         </div>
         <div>
           <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
@@ -150,7 +150,7 @@
       </div>
       <div class="work-card" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;display:flex;flex-direction:column;gap:14px;">
         <div style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-catalog" shape="rect" placeholder="Скриншот сайта" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-catalog-01" shape="rect" placeholder="Скриншот сайта" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
         </div>
         <div>
           <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
@@ -354,6 +354,17 @@ class Component extends DCLogic {
     const cards = Array.from(track.querySelectorAll(".work-card"));
     if (!cards.length) return;
     let raf = null;
+
+    const layout = () => {
+      // Center padding computed in JS (robust vs. nested calc()/vw quirks):
+      // enough space on each side that the first/last card can reach the
+      // track's visual center when scrolled all the way to that edge.
+      const cardWidth = cards[0].getBoundingClientRect().width;
+      const sidePad = Math.max(24, (track.clientWidth - cardWidth) / 2);
+      track.style.paddingLeft = sidePad + "px";
+      track.style.paddingRight = sidePad + "px";
+    };
+
     const update = () => {
       const trackRect = track.getBoundingClientRect();
       const centerX = trackRect.left + trackRect.width / 2;
@@ -368,6 +379,7 @@ class Component extends DCLogic {
       });
       raf = null;
     };
+
     track.addEventListener(
       "scroll",
       () => {
@@ -376,7 +388,13 @@ class Component extends DCLogic {
       },
       { passive: true }
     );
-    window.addEventListener("resize", update);
+    window.addEventListener("resize", () => {
+      layout();
+      update();
+    });
+
+    layout();
+    track.scrollLeft = 0; // with symmetric padding in place, this centers the first card
     update();
   }
 
