@@ -305,6 +305,18 @@ class Component extends DCLogic {
       );
       io.observe(canvas);
     }
+    // If the canvas has zero layout size the first time the shader sizes
+    // itself (can happen if this script runs before layout settles,
+    // especially on a same-tab reload), force a resize once real
+    // dimensions show up instead of staying permanently blank.
+    if ("ResizeObserver" in window) {
+      const ro = new ResizeObserver(() => {
+        if (gradient && gradient.minigl && canvas.clientWidth && canvas.clientHeight) {
+          gradient.resize();
+        }
+      });
+      ro.observe(canvas);
+    }
   }
   function boot() {
     const canvas = document.querySelector("#hero-gradient-canvas");
