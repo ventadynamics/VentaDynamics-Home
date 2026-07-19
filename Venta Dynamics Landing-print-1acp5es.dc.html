@@ -207,6 +207,7 @@ class Component extends DCLogic {
   state = { hero: false, about: false, services: false, work: false, process: false, contact: false };
 
   componentDidMount() {
+    window.dispatchEvent(new Event('hero-dom-ready'));
     const ids = ['hero', 'about', 'services', 'work', 'process', 'contact'];
     const reveal = (key) => this.setState({ [key]: true });
 
@@ -270,6 +271,7 @@ class Component extends DCLogic {
     gradient.freqX = (10 + Math.random() * 12) * 1e-5;
     gradient.freqY = (14 + Math.random() * 20) * 1e-5;
     gradient.seed = Math.floor(Math.random() * 100);
+    console.log("[hero] initGradient() called");
     gradient.initGradient("#hero-gradient-canvas");
     return gradient;
   }
@@ -307,15 +309,22 @@ class Component extends DCLogic {
       ro.observe(canvas);
     }
   }
+  let heroBooted = false;
   function boot() {
+    if (heroBooted) return;
     const canvas = document.querySelector("#hero-gradient-canvas");
-    if (!canvas) {
-      requestAnimationFrame(boot);
-      return;
-    }
+    if (!canvas) return;
+    heroBooted = true;
+    console.log("[hero] boot() starting on live canvas node");
     startHeroGradient(canvas);
   }
-  boot();
+  // The component framework can re-render/replace DOM nodes after first
+  // paint; wait for componentDidMount's "DOM is stable" signal instead of
+  // grabbing a canvas reference that might get swapped out afterwards.
+  window.addEventListener("hero-dom-ready", boot, { once: true });
+  // Fallback in case componentDidMount already fired before this script
+  // (or the event never fires for some reason).
+  setTimeout(boot, 1500);
 </script>
 <script>
 (async () => {
