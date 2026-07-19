@@ -480,7 +480,10 @@ class Gradient {
   * Using default colors assigned below if no variables have been found after maxCssVarRetries
   */
   waitForCssVars() {
-      if (this.computedCanvasStyle && -1 !== this.computedCanvasStyle.getPropertyValue("--gradient-color-1").indexOf("#")) this.init(), this.addIsLoadedClass();
+      const varsReady = this.computedCanvasStyle && ["--gradient-color-1", "--gradient-color-2", "--gradient-color-3", "--gradient-color-4"].every(
+          (name) => this.computedCanvasStyle.getPropertyValue(name).indexOf("#") !== -1
+      );
+      if (varsReady) this.init(), this.addIsLoadedClass();
       else {
           if (this.cssVarRetries += 1, this.cssVarRetries > this.maxCssVarRetries) {
               return this.sectionColors = [16711680, 16711680, 16711935, 65280, 255],void this.init();
@@ -492,15 +495,17 @@ class Gradient {
   * Initializes the four section colors by retrieving them from css variables.
   */
   initGradientColors() {
-      this.sectionColors = ["--gradient-color-1", "--gradient-color-2", "--gradient-color-3", "--gradient-color-4"].map(cssPropertyName => {
+      const fallbacks = ["#1b17ff", "#4b48ff", "#7a5cff", "#05061a"];
+      this.sectionColors = ["--gradient-color-1", "--gradient-color-2", "--gradient-color-3", "--gradient-color-4"].map((cssPropertyName, i) => {
           let hex = this.computedCanvasStyle.getPropertyValue(cssPropertyName).trim();
+          if (!hex || hex[0] !== "#") hex = fallbacks[i];
           //Check if shorthand hex value was used and double the length so the conversion in normalizeColor will work.
           if (4 === hex.length) {
               const hexTemp = hex.substr(1).split("").map(hexTemp => hexTemp + hexTemp).join("");
               hex = `#${hexTemp}`
           }
-          return hex && `0x${hex.substr(1)}`
-      }).filter(Boolean).map(normalizeColor)
+          return `0x${hex.substr(1)}`
+      }).map(normalizeColor)
   }
 }
 

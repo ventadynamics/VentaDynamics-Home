@@ -276,22 +276,18 @@ class Component extends DCLogic {
     return gradient;
   }
 
-  function startHeroGradient(canvas, attempt) {
-    attempt = attempt || 0;
-    // A same-tab reload can briefly leave the previous WebGL context not
-    // yet released by the GPU driver, so context creation can fail the
-    // first try right after Ctrl+R. Retry a few times before giving up.
-    const testCtx = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-    if (!testCtx && attempt < 5) {
-      setTimeout(() => startHeroGradient(canvas, attempt + 1), 200);
-      return;
-    }
-    const gradient = makeGradient(canvas);
+  function startHeroGradient(canvas) {
+    let gradient = makeGradient(canvas);
+    let restoring = false;
     canvas.addEventListener("webglcontextlost", (event) => {
       event.preventDefault();
     });
     canvas.addEventListener("webglcontextrestored", () => {
-      makeGradient(canvas);
+      if (restoring) return;
+      restoring = true;
+      gradient.pause();
+      gradient = makeGradient(canvas);
+      restoring = false;
     });
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
