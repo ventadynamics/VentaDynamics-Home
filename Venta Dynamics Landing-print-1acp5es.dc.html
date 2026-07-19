@@ -270,6 +270,10 @@ class Component extends DCLogic {
       return;
     }
     const gradient = new Gradient();
+    gradient.angle = Math.PI / 5;
+    gradient.amp = 480;
+    gradient.freqX = 7e-5;
+    gradient.freqY = 18e-5;
     gradient.initGradient("#hero-gradient-canvas");
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
