@@ -308,8 +308,19 @@ class Component extends DCLogic {
     ["#0f172a", "#1b17ff", "#38bdf8", "#020617"],
     ["#1b17ff", "#4338ca", "#3730a3", "#04030f"],
   ];
+  const GRADIENT_DEBUG = true;
+  const glog = (canvasId, ...args) => {
+    if (!GRADIENT_DEBUG) return;
+    const parts = args.map((a) => (typeof a === "object" && a !== null ? JSON.stringify(a) : String(a)));
+    console.log(`[grad ${canvasId} ${performance.now().toFixed(0)}ms]`, parts.join(" "));
+  };
   function makeGradient(canvasId, palettes) {
     const canvas = document.querySelector(canvasId);
+    glog(canvasId, "makeGradient()", {
+      canvasFound: !!canvas,
+      clientWidth: canvas && canvas.clientWidth,
+      clientHeight: canvas && canvas.clientHeight,
+    });
     const palette = palettes[Math.floor(Math.random() * palettes.length)];
     canvas.style.setProperty("--gradient-color-1", palette[0]);
     canvas.style.setProperty("--gradient-color-2", palette[1]);
@@ -320,7 +331,12 @@ class Component extends DCLogic {
     gradient.freqX = (10 + Math.random() * 12) * 1e-5;
     gradient.freqY = (14 + Math.random() * 20) * 1e-5;
     gradient.seed = Math.floor(Math.random() * 100);
-    gradient.initGradient(canvasId);
+    try {
+      gradient.initGradient(canvasId);
+      glog(canvasId, "initGradient() returned", { hasMinigl: !!gradient.minigl });
+    } catch (err) {
+      glog(canvasId, "initGradient() THREW", String(err && err.stack ? err.stack : err));
+    }
     return gradient;
   }
 
@@ -329,9 +345,11 @@ class Component extends DCLogic {
     let gradient = makeGradient(canvasId, palettes);
     let restoring = false;
     canvas.addEventListener("webglcontextlost", (event) => {
+      glog(canvasId, "webglcontextlost");
       event.preventDefault();
     });
     canvas.addEventListener("webglcontextrestored", () => {
+      glog(canvasId, "webglcontextrestored", { restoring });
       if (restoring) return;
       restoring = true;
       gradient.pause();
@@ -340,7 +358,12 @@ class Component extends DCLogic {
     });
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver(
-        (entries) => entries.forEach((entry) => (entry.isIntersecting ? gradient.play() : gradient.pause())),
+        (entries) =>
+          entries.forEach((entry) => {
+            glog(canvasId, "IO entry", { isIntersecting: entry.isIntersecting, ratio: entry.intersectionRatio });
+            if (entry.isIntersecting) gradient.play();
+            else gradient.pause();
+          }),
         { threshold: 0.05 }
       );
       io.observe(canvas);
@@ -351,6 +374,11 @@ class Component extends DCLogic {
     // dimensions show up instead of staying permanently blank.
     if ("ResizeObserver" in window) {
       const ro = new ResizeObserver(() => {
+        glog(canvasId, "RO fired", {
+          clientWidth: canvas.clientWidth,
+          clientHeight: canvas.clientHeight,
+          hasMinigl: !!(gradient && gradient.minigl),
+        });
         if (gradient && gradient.minigl && canvas.clientWidth && canvas.clientHeight) {
           gradient.resize();
         }
@@ -630,6 +658,7 @@ class Component extends DCLogic {
       if (booted.has(canvasId)) return;
       if (!document.querySelector(canvasId)) return;
       booted.add(canvasId);
+      glog(canvasId, "boot() starting gradient");
       startGradientCanvas(canvasId, palettes);
     });
     if (!booted.has("about-photo-sync")) {
