@@ -144,7 +144,7 @@
     <h2 style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">Избранные проекты</h2>
     <div style="position:relative;">
     <div id="work-track" class="work-track" style="display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;padding:24px 24px;-webkit-overflow-scrolling:touch;width:100vw;margin-left:calc(-50vw + 50%);cursor:grab;user-select:none;-webkit-mask-image:linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);mask-image:linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);">
-      <div class="work-card" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;display:flex;flex-direction:column;gap:14px;">
+      <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:14px;">
         <div style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
           <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-fintech-01" shape="rect" placeholder="Скриншот интерфейса" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
         </div>
@@ -153,8 +153,9 @@
           <h3 style="font-size:18px;font-weight:700;margin:4px 0 4px;">Финтех-платформа</h3>
           <p style="font-size:14px;line-height:1.5;color:rgba(10,10,10,0.6);margin:0;">Веб-приложение · дизайн-система</p>
         </div>
+        </div>
       </div>
-      <div class="work-card" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;display:flex;flex-direction:column;gap:14px;">
+      <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;display:flex;flex-direction:column;gap:14px;">
         <div style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
           <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-booking-01" shape="rect" placeholder="Скриншот приложения" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
         </div>
@@ -163,8 +164,9 @@
           <h3 style="font-size:18px;font-weight:700;margin:4px 0 4px;">Сервис бронирования</h3>
           <p style="font-size:14px;line-height:1.5;color:rgba(10,10,10,0.6);margin:0;">Мобильное приложение</p>
         </div>
+        </div>
       </div>
-      <div class="work-card" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;display:flex;flex-direction:column;gap:14px;">
+      <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;display:flex;flex-direction:column;gap:14px;">
         <div style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
           <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="case-catalog-01" shape="rect" placeholder="Скриншот сайта" style="width:100%;height:100%;" hint-size="100%,100%"></x-import>
         </div>
@@ -172,6 +174,7 @@
           <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
           <h3 style="font-size:18px;font-weight:700;margin:4px 0 4px;">Корпоративный каталог</h3>
           <p style="font-size:14px;line-height:1.5;color:rgba(10,10,10,0.6);margin:0;">Веб-сайт · разработка</p>
+        </div>
         </div>
       </div>
     </div>
