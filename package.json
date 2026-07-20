@@ -1,0 +1,9 @@
+{
+  "name": "ventadynamics-home",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Venta Dynamics static landing page",
+  "scripts": {
+    "build": "echo 'static site, nothing to build'"
+  }
+}
