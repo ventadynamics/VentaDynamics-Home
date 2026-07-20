@@ -394,6 +394,26 @@ class Component extends DCLogic {
       });
       ro.observe(canvas);
     }
+    // The component framework can replace this canvas with a fresh node
+    // after we've already bound WebGL to the old one (same issue as the
+    // work carousel's track) — the old canvas silently sits there
+    // detached, never getting laid out, so the gradient never appears.
+    // Self-heal: if the live node stops matching, restart the gradient on
+    // whichever node is actually in the document now.
+    let canvasIdentityChecks = 0;
+    const canvasIdentityTimer = setInterval(() => {
+      canvasIdentityChecks += 1;
+      const current = document.querySelector(canvasId);
+      const stale = !canvas.isConnected || current !== canvas;
+      if (stale && current) {
+        glog(canvasId, "canvas was replaced — restarting gradient on the fresh node");
+        clearInterval(canvasIdentityTimer);
+        gradient.pause();
+        startGradientCanvas(canvasId, palettes);
+        return;
+      }
+      if (canvasIdentityChecks >= 30) clearInterval(canvasIdentityTimer);
+    }, 300);
   }
   function syncAboutPhotoSize() {
     const photoBox = document.querySelector("#about-photo-box");
@@ -540,22 +560,32 @@ class Component extends DCLogic {
     }
     window.addEventListener("load", () => resettle("window-load"));
 
-    // Diagnostic only: catch the framework silently replacing #work-track
-    // with a fresh node after our listeners were bound to the old one
-    // (this happened with the hero canvas earlier in the project).
+    // Confirmed via logging: the component framework can silently replace
+    // #work-track with a fresh node some time after our listeners were
+    // bound to the old one (it happened before hero-dom-ready ever fires,
+    // so waiting for that signal alone isn't enough). When that happens
+    // every measurement here reads 0 forever, since the old node is
+    // detached. Self-heal: if the live node stops matching the one we
+    // bound to, tear down this instance's watcher and re-run the whole
+    // init against the current node.
     let identityChecks = 0;
     const identityTimer = setInterval(() => {
       identityChecks += 1;
       const current = document.querySelector("#work-track");
+      const stale = !track.isConnected || current !== track;
       wlog("identity check", {
         n: identityChecks,
         sameNode: current === track,
         stillConnected: track.isConnected,
-        currentPaddingLeft: current && current.style.paddingLeft,
-        currentScrollLeft: current && current.scrollLeft,
       });
-      if (identityChecks >= 10) clearInterval(identityTimer);
-    }, 1000);
+      if (stale && current) {
+        wlog("work-track was replaced — re-binding carousel to the fresh node");
+        clearInterval(identityTimer);
+        initWorkCarousel();
+        return;
+      }
+      if (identityChecks >= 30) clearInterval(identityTimer);
+    }, 300);
 
     // Click-and-drag scrolling (mouse only; touch already scrolls natively).
     let isDown = false;
