@@ -429,20 +429,35 @@ class Component extends DCLogic {
         requestAnimationFrame(() => requestAnimationFrame(update));
       });
     }
-    // Catch-all for any other post-load size shift (images finishing
-    // decode, late layout, etc.) that the font-load hook doesn't cover.
-    if ("ResizeObserver" in window) {
-      let firstRO = true;
-      const ro = new ResizeObserver(() => {
-        if (firstRO) {
-          firstRO = false;
-          return;
-        }
-        layout();
+    // On a cold cache (first visit), everything below the fold (images,
+    // canvases, custom elements) settles at different times than on a
+    // cached reload, which shifts the page's scrollbar/viewport width and
+    // throws off the 100vw-based track sizing after our initial pass. Keep
+    // correcting for as long as the track's own size keeps changing
+    // (instead of only checking once), and do a final pass on window
+    // "load" (all subresources fully loaded) too. Stop forcing the scroll
+    // position back to the first card the moment a visitor actually
+    // touches the carousel, so a later resize/rotation never yanks them
+    // away from where they scrolled to.
+    let settled = false;
+    const markSettled = () => { settled = true; };
+    track.addEventListener("pointerdown", markSettled, { capture: true, once: true });
+    track.addEventListener("wheel", markSettled, { passive: true, once: true });
+    setTimeout(markSettled, 6000);
+    const resettle = () => {
+      layout();
+      if (settled) {
         update();
-      });
+        return;
+      }
+      track.scrollLeft = 0;
+      requestAnimationFrame(() => requestAnimationFrame(update));
+    };
+    if ("ResizeObserver" in window) {
+      const ro = new ResizeObserver(resettle);
       ro.observe(track);
     }
+    window.addEventListener("load", resettle);
 
     // Click-and-drag scrolling (mouse only; touch already scrolls natively).
     let isDown = false;
