@@ -274,7 +274,7 @@
       <div style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 100ms,transform .7s cubic-bezier(.16,1,.3,1) 100ms;display:flex;flex-wrap:wrap;gap:48px;align-items:center;">
         <div style="display:flex;align-items:center;gap:16px;">
           <a href="javascript:void(0)" id="copy-email-badge" aria-label="Скопировать email" style="position:relative;flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#ffffff;cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#ffffff;color:#0a0a0a;">@<span id="copy-email-tooltip" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:#ffffff;color:#0a0a0a;font-size:12px;font-weight:600;padding:6px 10px;border-radius:3px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;">Скопировано</span></a>
-          <a href="mailto:hello@ventadynamics.studio" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">hello@ventadynamics.studio</a>
+          <a href="mailto:hello@ventadynamics.studio" id="copy-email-text" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">hello@ventadynamics.studio</a>
         </div>
         <div style="display:flex;align-items:center;gap:16px;">
           <span style="flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.02em;">TG</span>
@@ -603,7 +603,7 @@ class Component extends DCLogic {
     // under a direct listener.
     let hideTimer = null;
     document.addEventListener("click", async (e) => {
-      const badge = e.target.closest("#copy-email-badge");
+      const badge = e.target.closest("#copy-email-badge, #copy-email-text");
       if (!badge) return;
       e.preventDefault();
       const email = "hello@ventadynamics.studio";
