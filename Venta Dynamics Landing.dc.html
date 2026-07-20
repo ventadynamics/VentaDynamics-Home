@@ -547,7 +547,7 @@ class Component extends DCLogic {
       } else {
         setTimeout(resetBehavior, 500);
       }
-      scheduleAuto();
+      scheduleAuto("drag-end");
     };
     window.addEventListener("pointerup", endDrag);
     window.addEventListener("pointercancel", endDrag);
@@ -563,32 +563,44 @@ class Component extends DCLogic {
 
     // Prev/next arrow buttons.
     const step = () => cards[0].getBoundingClientRect().width + 32;
-    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto(); track.scrollBy({ left: -step(), behavior: "smooth" }); scheduleAuto(); });
-    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto(); track.scrollBy({ left: step(), behavior: "smooth" }); scheduleAuto(); });
+    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto("prev-click"); track.scrollBy({ left: -step(), behavior: "smooth" }); scheduleAuto("prev-click"); });
+    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto("next-click"); track.scrollBy({ left: step(), behavior: "smooth" }); scheduleAuto("next-click"); });
 
     // Auto-advance every few seconds; pause on hover/drag so it never
     // fights a visitor who's actively browsing the cases.
     let autoTimer = null;
-    function pauseAuto() {
+    let autoTickN = 0;
+    function pauseAuto(why) {
+      wlog("pauseAuto", { why, hadTimer: !!autoTimer });
       clearInterval(autoTimer);
       autoTimer = null;
     }
-    function scheduleAuto() {
-      pauseAuto();
+    function scheduleAuto(why) {
+      wlog("scheduleAuto", { why });
+      pauseAuto("re-schedule");
       autoTimer = setInterval(() => {
+        autoTickN += 1;
         const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+        wlog("auto tick", {
+          n: autoTickN,
+          scrollLeft: track.scrollLeft,
+          clientWidth: track.clientWidth,
+          scrollWidth: track.scrollWidth,
+          atEnd,
+          step: step(),
+        });
         if (atEnd) track.scrollTo({ left: 0, behavior: "smooth" });
         else track.scrollBy({ left: step(), behavior: "smooth" });
       }, 4500);
     }
-    track.addEventListener("mouseenter", pauseAuto);
-    track.addEventListener("mouseleave", scheduleAuto);
-    track.addEventListener("pointerdown", pauseAuto, { capture: true });
+    track.addEventListener("mouseenter", () => pauseAuto("mouseenter"));
+    track.addEventListener("mouseleave", () => scheduleAuto("mouseleave"));
+    track.addEventListener("pointerdown", () => pauseAuto("pointerdown"), { capture: true });
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) pauseAuto();
-      else scheduleAuto();
+      if (document.hidden) pauseAuto("tab-hidden");
+      else scheduleAuto("tab-visible");
     });
-    scheduleAuto();
+    scheduleAuto("init");
   }
 
   const booted = new Set();
