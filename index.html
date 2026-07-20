@@ -57,8 +57,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scrollbar-color: #1b17ff #f2f2f5; scrollbar-width: thin; overflow-x: hidden; }
-  body { margin: 0; overflow-x: hidden; }
+  html { scroll-behavior: smooth; scrollbar-color: #1b17ff #f2f2f5; scrollbar-width: thin; }
+  body { margin: 0; }
   a { color: #1b17ff; text-decoration: none; }
   a:hover { color: #0a0a0a; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -188,7 +188,7 @@
   <section id="work" style="min-height:calc(100vh - 84px);display:flex;flex-direction:column;justify-content:center;max-width:1400px;margin:0 auto;padding:clamp(64px,8vw,100px) clamp(24px,5vw,64px);border-bottom:1px solid rgba(10,10,10,0.12);scroll-margin-top:84px;">
     <div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">03 — Работы</div>
     <h2 style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">Избранные проекты</h2>
-    <div style="position:relative;">
+    <div style="position:relative;overflow-x:hidden;">
     <div id="work-track" class="work-track" style="display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;padding:24px 24px;-webkit-overflow-scrolling:touch;width:100vw;margin-left:calc(-50vw + 50%);cursor:grab;user-select:none;-webkit-mask-image:linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);mask-image:linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);">
       <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:14px;">
         <div class="work-card-media" style="width:100%;aspect-ratio:16/10;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
