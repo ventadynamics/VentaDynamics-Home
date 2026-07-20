@@ -47,6 +47,26 @@
   ]
 }
 </script>
+<style>
+  /* Critical, layout-affecting rules only — placed in the real <head> (not
+     the framework's <helmet>) because that stylesheet has been observed to
+     mount unreliably on some loads. Purely cosmetic rules stay in helmet;
+     losing those on a flaky load just looks slightly plainer. Losing these
+     ones breaks layout outright, so they can't depend on helmet mounting. */
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { color: #1b17ff; text-decoration: none; }
+  a:hover { color: #0a0a0a; }
+  @media (max-width: 640px) {
+    #about-photo-box { width: 100% !important; max-width: 220px; height: auto !important; }
+  }
+  @media (max-width: 700px) {
+    .nav-bar { flex-wrap: wrap; height: auto !important; padding-top: 16px !important; padding-bottom: 16px !important; row-gap: 12px; }
+    .nav-links { width: 100%; justify-content: center; gap: 20px !important; }
+    #hero-inner { padding: calc(clamp(24px,5vw,64px) + 16px) !important; }
+    #hero-inner h1 { max-width: 100% !important; }
+  }
+</style>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -56,26 +76,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scrollbar-color: #1b17ff #f2f2f5; scrollbar-width: thin; }
-  body { margin: 0; }
-  a { color: #1b17ff; text-decoration: none; }
-  a:hover { color: #0a0a0a; }
+  html { scrollbar-color: #1b17ff #f2f2f5; scrollbar-width: thin; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: #f2f2f5; }
   ::-webkit-scrollbar-thumb { background: #1b17ff; border-radius: 0; border: 2px solid #f2f2f5; }
   ::-webkit-scrollbar-thumb:hover { background: #0a0a0a; }
   @media (prefers-reduced-motion: reduce) {
     #hero-gradient-canvas { display: none; }
-  }
-  @media (max-width: 640px) {
-    #about-photo-box { width: 100% !important; max-width: 220px; height: auto !important; }
-  }
-  @media (max-width: 700px) {
-    .nav-bar { flex-wrap: wrap; height: auto !important; padding-top: 16px !important; padding-bottom: 16px !important; row-gap: 12px; }
-    .nav-links { width: 100%; justify-content: center; gap: 20px !important; }
-    #hero-inner { padding: calc(clamp(24px,5vw,64px) + 16px) !important; }
-    #hero-inner h1 { max-width: 100% !important; }
   }
   .work-track { scrollbar-width: none; }
   .work-track::-webkit-scrollbar { display: none; }
