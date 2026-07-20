@@ -410,6 +410,31 @@ class Component extends DCLogic {
     // change yet, so measuring immediately under-scales the first card.
     requestAnimationFrame(() => requestAnimationFrame(update));
 
+    // Re-measure once web fonts swap in: the custom font can change card
+    // width/height after our initial layout pass, which throws off the
+    // centering padding and leaves the first card looking unscaled.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        layout();
+        track.scrollLeft = 0;
+        requestAnimationFrame(() => requestAnimationFrame(update));
+      });
+    }
+    // Catch-all for any other post-load size shift (images finishing
+    // decode, late layout, etc.) that the font-load hook doesn't cover.
+    if ("ResizeObserver" in window) {
+      let firstRO = true;
+      const ro = new ResizeObserver(() => {
+        if (firstRO) {
+          firstRO = false;
+          return;
+        }
+        layout();
+        update();
+      });
+      ro.observe(track);
+    }
+
     // Click-and-drag scrolling (mouse only; touch already scrolls natively).
     let isDown = false;
     let dragStartX = 0;
