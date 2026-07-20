@@ -457,7 +457,7 @@ class Gradient {
   }
   shouldSkipFrame(e) {
       if (window.document.hidden || !this.conf.playing) return true;
-      if (this.last && e - this.last < 1000 / 30) return true;
+      if (this.last && e - this.last < 1000 / 60) return true;
       return false;
   }
   updateFrequency(e) {
