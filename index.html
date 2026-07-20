@@ -589,21 +589,18 @@ class Component extends DCLogic {
 
   function initHeroParallax() {
     const hero = document.querySelector("#hero");
-    const canvasWrap = document.querySelector("#hero-canvas-wrap");
     const inner = document.querySelector("#hero-inner");
-    if (!hero || (!canvasWrap && !inner)) return;
+    if (!hero || !inner) return;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (window.matchMedia && window.matchMedia("(hover: none)").matches) return; // skip on touch
     hero.addEventListener("mousemove", (e) => {
       const rect = hero.getBoundingClientRect();
       const relX = (e.clientX - rect.left) / rect.width - 0.5;
       const relY = (e.clientY - rect.top) / rect.height - 0.5;
-      if (canvasWrap) canvasWrap.style.transform = `translate3d(${relX * -16}px, ${relY * -16}px, 0)`;
-      if (inner) inner.style.transform = `translate3d(${relX * 10}px, ${relY * 10}px, 0)`;
+      inner.style.transform = `translate3d(${relX * 10}px, ${relY * 10}px, 0)`;
     });
     hero.addEventListener("mouseleave", () => {
-      if (canvasWrap) canvasWrap.style.transform = "";
-      if (inner) inner.style.transform = "";
+      inner.style.transform = "";
     });
   }
 
