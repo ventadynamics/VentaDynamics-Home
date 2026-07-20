@@ -358,14 +358,22 @@ class Component extends DCLogic {
     }
   }
 
+  const WORK_DEBUG = true;
+  const wlog = (...args) => {
+    if (!WORK_DEBUG) return;
+    console.log(`%c[work ${performance.now().toFixed(0)}ms]`, "color:#1b17ff;font-weight:700", ...args);
+  };
+
   function initWorkCarousel() {
     const track = document.querySelector("#work-track");
+    wlog("init", { trackFound: !!track });
     if (!track) return;
     const cards = Array.from(track.querySelectorAll(".work-card"));
+    wlog("cards found", cards.length);
     if (!cards.length) return;
     let raf = null;
 
-    const layout = () => {
+    const layout = (why) => {
       // Center padding computed in JS (robust vs. nested calc()/vw quirks):
       // enough space on each side that the first/last card can reach the
       // track's visual center when scrolled all the way to that edge.
@@ -373,12 +381,14 @@ class Component extends DCLogic {
       const sidePad = Math.max(24, (track.clientWidth - cardWidth) / 2);
       track.style.paddingLeft = sidePad + "px";
       track.style.paddingRight = sidePad + "px";
+      wlog("layout()", { why, cardWidth, trackClientWidth: track.clientWidth, sidePad });
     };
 
-    const update = () => {
+    const update = (why) => {
       const trackRect = track.getBoundingClientRect();
       const centerX = trackRect.left + trackRect.width / 2;
-      cards.forEach((card) => {
+      const scales = [];
+      cards.forEach((card, i) => {
         const r = card.getBoundingClientRect();
         const cardCenter = r.left + r.width / 2;
         const dist = Math.abs(cardCenter - centerX);
@@ -386,7 +396,9 @@ class Component extends DCLogic {
         const scale = 1 - norm * 0.22;
         card.style.transform = `scale(${scale})`;
         card.style.opacity = String(1 - norm * 0.4);
+        scales.push({ i, cardCenter: Math.round(cardCenter), dist: Math.round(dist), scale: scale.toFixed(3) });
       });
+      wlog("update()", { why, trackWidth: Math.round(trackRect.width), centerX: Math.round(centerX), scrollLeft: track.scrollLeft, scales });
       raf = null;
     };
 
@@ -394,30 +406,32 @@ class Component extends DCLogic {
       "scroll",
       () => {
         if (raf) return;
-        raf = requestAnimationFrame(update);
+        raf = requestAnimationFrame(() => update("scroll"));
       },
       { passive: true }
     );
     window.addEventListener("resize", () => {
-      layout();
-      update();
+      layout("window-resize");
+      update("window-resize");
     });
 
-    layout();
+    layout("initial-sync");
     track.scrollLeft = 0; // with symmetric padding in place, this centers the first card
+    wlog("after initial layout+scrollLeft=0", { scrollLeft: track.scrollLeft, paddingLeft: track.style.paddingLeft });
     // Wait two frames before the first scale pass: on initial load the
     // browser hasn't necessarily settled the padding/scroll-position
     // change yet, so measuring immediately under-scales the first card.
-    requestAnimationFrame(() => requestAnimationFrame(update));
+    requestAnimationFrame(() => requestAnimationFrame(() => update("initial-raf-x2")));
 
     // Re-measure once web fonts swap in: the custom font can change card
     // width/height after our initial layout pass, which throws off the
     // centering padding and leaves the first card looking unscaled.
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
-        layout();
+        wlog("document.fonts.ready resolved");
+        layout("fonts-ready");
         track.scrollLeft = 0;
-        requestAnimationFrame(() => requestAnimationFrame(update));
+        requestAnimationFrame(() => requestAnimationFrame(() => update("fonts-ready-raf-x2")));
       });
     }
     // On a cold cache (first visit), everything below the fold (images,
@@ -431,24 +445,45 @@ class Component extends DCLogic {
     // touches the carousel, so a later resize/rotation never yanks them
     // away from where they scrolled to.
     let settled = false;
-    const markSettled = () => { settled = true; };
-    track.addEventListener("pointerdown", markSettled, { capture: true, once: true });
-    track.addEventListener("wheel", markSettled, { passive: true, once: true });
-    setTimeout(markSettled, 6000);
-    const resettle = () => {
-      layout();
+    const markSettled = (reason) => {
+      wlog("markSettled", reason);
+      settled = true;
+    };
+    track.addEventListener("pointerdown", () => markSettled("pointerdown"), { capture: true, once: true });
+    track.addEventListener("wheel", () => markSettled("wheel"), { passive: true, once: true });
+    setTimeout(() => markSettled("timeout-6000"), 6000);
+    const resettle = (why) => {
+      wlog("resettle triggered", { why, settled, trackClientWidth: track.clientWidth });
+      layout(`resettle:${why}`);
       if (settled) {
-        update();
+        update(`resettle:${why}`);
         return;
       }
       track.scrollLeft = 0;
-      requestAnimationFrame(() => requestAnimationFrame(update));
+      requestAnimationFrame(() => requestAnimationFrame(() => update(`resettle:${why}-raf-x2`)));
     };
     if ("ResizeObserver" in window) {
-      const ro = new ResizeObserver(resettle);
+      const ro = new ResizeObserver(() => resettle("resize-observer"));
       ro.observe(track);
     }
-    window.addEventListener("load", resettle);
+    window.addEventListener("load", () => resettle("window-load"));
+
+    // Diagnostic only: catch the framework silently replacing #work-track
+    // with a fresh node after our listeners were bound to the old one
+    // (this happened with the hero canvas earlier in the project).
+    let identityChecks = 0;
+    const identityTimer = setInterval(() => {
+      identityChecks += 1;
+      const current = document.querySelector("#work-track");
+      wlog("identity check", {
+        n: identityChecks,
+        sameNode: current === track,
+        stillConnected: track.isConnected,
+        currentPaddingLeft: current && current.style.paddingLeft,
+        currentScrollLeft: current && current.scrollLeft,
+      });
+      if (identityChecks >= 10) clearInterval(identityTimer);
+    }, 1000);
 
     // Click-and-drag scrolling (mouse only; touch already scrolls natively).
     let isDown = false;
@@ -551,13 +586,21 @@ class Component extends DCLogic {
   // The component framework can re-render/replace DOM nodes after first
   // paint; wait for componentDidMount's "DOM is stable" signal instead of
   // grabbing a canvas reference that might get swapped out afterwards.
+  wlog("boot script start", { heroDomReadyAlready: !!window.__heroDomReady });
   if (window.__heroDomReady) {
+    wlog("boot path: __heroDomReady already true, booting sync");
     boot();
   } else {
-    window.addEventListener("hero-dom-ready", boot, { once: true });
+    window.addEventListener("hero-dom-ready", () => {
+      wlog("boot path: hero-dom-ready event fired");
+      boot();
+    }, { once: true });
   }
   // Safety net in case the event is missed for some other reason.
-  setTimeout(boot, 300);
+  setTimeout(() => {
+    wlog("boot path: 300ms timeout fallback firing");
+    boot();
+  }, 300);
 </script>
 </body>
 </html>
