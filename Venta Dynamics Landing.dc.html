@@ -534,22 +534,19 @@ class Component extends DCLogic {
       if (!isDown) return;
       isDown = false;
       track.style.cursor = "grab";
-      // Snap to the nearest card ourselves, smoothly. Keep native
-      // scroll-snap OFF while our own animation runs: turning it back on
-      // immediately, before scrollLeft is at a valid snap point, makes the
-      // browser instantly (not smoothly) force-correct the position,
-      // which is what caused the harsh jump. Only restore it once our
-      // smooth scroll has actually finished. Also resume auto-advance,
-      // which was paused for the drag.
-      const s = step();
-      const idx = Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / s)));
-      const restoreSnap = () => { track.style.scrollSnapType = "x mandatory"; };
+      // Let the browser's own scroll-snap decide (and animate to) the
+      // nearest card — just make sure that correction is smooth instead
+      // of an instant jump. scroll-behavior has to stay "auto" during the
+      // drag itself (smooth would lag behind the pointer), so it's only
+      // switched on right here, then back off once the snap settles.
+      track.style.scrollBehavior = "smooth";
+      track.style.scrollSnapType = "x mandatory";
+      const resetBehavior = () => { track.style.scrollBehavior = "auto"; };
       if ("onscrollend" in window) {
-        track.addEventListener("scrollend", restoreSnap, { once: true });
+        track.addEventListener("scrollend", resetBehavior, { once: true });
       } else {
-        setTimeout(restoreSnap, 500);
+        setTimeout(resetBehavior, 500);
       }
-      track.scrollTo({ left: idx * s, behavior: "smooth" });
       scheduleAuto();
     };
     window.addEventListener("pointerup", endDrag);
