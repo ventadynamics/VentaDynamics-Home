@@ -373,7 +373,10 @@ class Component extends DCLogic {
   const WORK_DEBUG = true;
   const wlog = (...args) => {
     if (!WORK_DEBUG) return;
-    console.log(`%c[work ${performance.now().toFixed(0)}ms]`, "color:#1b17ff;font-weight:700", ...args);
+    // Plain-text stringify (not raw objects) so the log stays readable
+    // when copy-pasted out of devtools instead of collapsing to "Object".
+    const parts = args.map((a) => (typeof a === "object" && a !== null ? JSON.stringify(a) : String(a)));
+    console.log(`[work ${performance.now().toFixed(0)}ms]`, parts.join(" "));
   };
 
   function initWorkCarousel() {
