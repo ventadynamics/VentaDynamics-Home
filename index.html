@@ -73,9 +73,22 @@
     #work-prev, #work-next { display: none !important; }
   }
 </style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110916071', 'ym');
+
+    ym(110916071, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
 <script src="./support.js"></script>
 </head>
 <body>
+<noscript><div><img src="https://mc.yandex.ru/watch/110916071" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -286,7 +299,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:16px;">
           <span style="flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.02em;">TG</span>
-          <a href="https://t.me/avetrill4real" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">@avetrill4real</a>
+          <a href="https://t.me/avetrill4real" target="_blank" rel="noopener" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">@avetrill4real</a>
         </div>
       </div>
     </div>
@@ -362,6 +375,16 @@ class Component extends DCLogic {
     ["#0f172a", "#1b17ff", "#38bdf8", "#020617"],
     ["#1b17ff", "#4338ca", "#3730a3", "#04030f"],
   ];
+  const YM_ID = 110916071;
+  const firedGoals = new Set();
+  function ymGoal(name, once) {
+    if (once) {
+      if (firedGoals.has(name)) return;
+      firedGoals.add(name);
+    }
+    if (typeof window.ym === "function") window.ym(YM_ID, "reachGoal", name);
+  }
+
   const GRADIENT_DEBUG = true;
   const glog = (canvasId, ...args) => {
     if (!GRADIENT_DEBUG) return;
@@ -571,7 +594,10 @@ class Component extends DCLogic {
       const io = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) setActive(entry.target.id);
+            if (entry.isIntersecting) {
+              setActive(entry.target.id);
+              ymGoal("section_view_" + entry.target.id, true);
+            }
           });
         },
         { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
@@ -633,6 +659,7 @@ class Component extends DCLogic {
       const badge = e.target.closest("#copy-email-badge, #copy-email-text");
       if (!badge) return;
       e.preventDefault();
+      ymGoal("email_copy");
       const email = "d.yantsevich@ventadynamics.dev";
       try {
         await navigator.clipboard.writeText(email);
@@ -649,6 +676,12 @@ class Component extends DCLogic {
         tooltip.style.opacity = "0";
         tooltip.style.transform = "translateX(-50%) translateY(4px)";
       }, 1600);
+    });
+    document.addEventListener("click", (e) => {
+      const tg = e.target.closest('a[href^="https://t.me/"]');
+      if (tg) ymGoal("telegram_click");
+      const cta = e.target.closest('a[href="#contact"]');
+      if (cta) ymGoal("cta_click");
     });
   }
 
@@ -851,7 +884,6 @@ class Component extends DCLogic {
       } else {
         setTimeout(resetBehavior, 500);
       }
-      scheduleAuto("drag-end");
     };
     window.addEventListener("pointerup", endDrag);
     window.addEventListener("pointercancel", endDrag);
@@ -867,44 +899,8 @@ class Component extends DCLogic {
 
     // Prev/next arrow buttons.
     const step = () => cards[0].getBoundingClientRect().width + 32;
-    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto("prev-click"); track.scrollBy({ left: -step(), behavior: "smooth" }); scheduleAuto("prev-click"); });
-    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); pauseAuto("next-click"); track.scrollBy({ left: step(), behavior: "smooth" }); scheduleAuto("next-click"); });
-
-    // Auto-advance every few seconds; pause on hover/drag so it never
-    // fights a visitor who's actively browsing the cases.
-    let autoTimer = null;
-    let autoTickN = 0;
-    function pauseAuto(why) {
-      wlog("pauseAuto", { why, hadTimer: !!autoTimer });
-      clearInterval(autoTimer);
-      autoTimer = null;
-    }
-    function scheduleAuto(why) {
-      wlog("scheduleAuto", { why });
-      pauseAuto("re-schedule");
-      autoTimer = setInterval(() => {
-        autoTickN += 1;
-        const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
-        wlog("auto tick", {
-          n: autoTickN,
-          scrollLeft: track.scrollLeft,
-          clientWidth: track.clientWidth,
-          scrollWidth: track.scrollWidth,
-          atEnd,
-          step: step(),
-        });
-        if (atEnd) track.scrollTo({ left: 0, behavior: "smooth" });
-        else track.scrollBy({ left: step(), behavior: "smooth" });
-      }, 4500);
-    }
-    track.addEventListener("mouseenter", () => pauseAuto("mouseenter"));
-    track.addEventListener("mouseleave", () => scheduleAuto("mouseleave"));
-    track.addEventListener("pointerdown", () => pauseAuto("pointerdown"), { capture: true });
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) pauseAuto("tab-hidden");
-      else scheduleAuto("tab-visible");
-    });
-    scheduleAuto("init");
+    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: -step(), behavior: "smooth" }); });
+    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: step(), behavior: "smooth" }); });
   }
 
   const booted = new Set();
