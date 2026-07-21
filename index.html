@@ -30,9 +30,9 @@
       "url": "https://ventadynamics.dev/",
       "image": "https://ventadynamics.dev/assets/og-image.png",
       "description": "Независимый проект дизайна и разработки цифровых продуктов. Работаем на результат, а не на тренды.",
-      "email": "hello@ventadynamics.studio",
+      "email": "d.yantsevich@ventadynamics.dev",
       "founder": { "@id": "https://ventadynamics.dev/#founder" },
-      "sameAs": ["https://t.me/ventadynamics"]
+      "sameAs": ["https://t.me/avetrill4real"]
     },
     {
       "@type": "Person",
@@ -40,9 +40,9 @@
       "name": "Даниил Янцевич",
       "url": "https://ventadynamics.dev/",
       "jobTitle": "Дизайн и разработка",
-      "email": "hello@ventadynamics.studio",
+      "email": "d.yantsevich@ventadynamics.dev",
       "worksFor": { "@id": "https://ventadynamics.dev/#service" },
-      "sameAs": ["https://t.me/ventadynamics"]
+      "sameAs": ["https://t.me/avetrill4real"]
     }
   ]
 }
@@ -282,11 +282,11 @@
       <div style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 100ms,transform .7s cubic-bezier(.16,1,.3,1) 100ms;display:flex;flex-wrap:wrap;gap:48px;align-items:center;">
         <div style="display:flex;align-items:center;gap:16px;">
           <a href="javascript:void(0)" id="copy-email-badge" aria-label="Скопировать email" style="position:relative;flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#ffffff;cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#ffffff;color:#0a0a0a;">@<span id="copy-email-tooltip" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:#ffffff;color:#0a0a0a;font-size:12px;font-weight:600;padding:6px 10px;border-radius:3px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;">Скопировано</span></a>
-          <a href="mailto:hello@ventadynamics.studio" id="copy-email-text" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;overflow-wrap:anywhere;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">hello@ventadynamics.studio</a>
+          <a href="mailto:d.yantsevich@ventadynamics.dev" id="copy-email-text" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;overflow-wrap:anywhere;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">d.yantsevich@ventadynamics.dev</a>
         </div>
         <div style="display:flex;align-items:center;gap:16px;">
           <span style="flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.02em;">TG</span>
-          <a href="https://t.me/ventadynamics" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">@ventadynamics</a>
+          <a href="https://t.me/avetrill4real" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">@avetrill4real</a>
         </div>
       </div>
     </div>
@@ -299,7 +299,7 @@
         <a href="#services" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Услуги</a>
         <a href="#work" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Работы</a>
         <a href="#process" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Процесс</a>
-        <a href="mailto:hello@ventadynamics.studio" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">hello@ventadynamics.studio</a>
+        <a href="mailto:d.yantsevich@ventadynamics.dev" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">d.yantsevich@ventadynamics.dev</a>
       </div>
     </div>
   </footer>
@@ -633,7 +633,7 @@ class Component extends DCLogic {
       const badge = e.target.closest("#copy-email-badge, #copy-email-text");
       if (!badge) return;
       e.preventDefault();
-      const email = "hello@ventadynamics.studio";
+      const email = "d.yantsevich@ventadynamics.dev";
       try {
         await navigator.clipboard.writeText(email);
       } catch (err) {
