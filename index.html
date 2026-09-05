@@ -58,19 +58,80 @@
   body { margin: 0; }
   a { color: #1b17ff; text-decoration: none; }
   a:hover { color: #0a0a0a; }
+  html { -webkit-text-size-adjust: 100%; }
   @media (max-width: 640px) {
-    #about-photo-box { width: 100% !important; max-width: 220px; height: auto !important; }
+    #about-photo-box { width: 100% !important; max-width: 200px; height: auto !important; }
   }
   @media (max-width: 700px) {
-    .nav-bar { flex-wrap: wrap; height: auto !important; padding-top: 16px !important; padding-bottom: 16px !important; row-gap: 12px; }
-    .nav-links { width: 100%; justify-content: center; gap: 20px !important; }
-    #hero-inner { padding: calc(clamp(24px,5vw,64px) + 16px) !important; }
-    #hero-inner h1 { max-width: 100% !important; }
+    /* ---- Nav: logo + CTA on the first row, section links on the second. ---- */
+    .nav-bar { flex-wrap: wrap; height: auto !important; padding: 12px 20px !important; row-gap: 10px; column-gap: 12px !important; }
+    .nav-logo { align-items: flex-start !important; order: 0; flex: 1 1 0; min-width: 0; }
+    #nav-about { font-size: 15px !important; white-space: nowrap; }
+    .nav-logo span { font-size: 9.5px !important; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .nav-cta { order: 1; flex: none; font-size: 12px !important; padding: 8px 12px !important; }
+    .nav-links { order: 2; width: 100%; justify-content: flex-start; gap: 22px !important; margin-left: 0 !important; }
+    .nav-links a { font-size: 14px !important; }
+
+    /* ---- Sections: content-sized instead of forced to viewport height. ---- */
+    #about, #services, #work, #process, #contact { min-height: 0 !important; }
+    #about, #services, #work, #process { padding: 56px 20px !important; }
+    #contact > div { padding: 64px 20px !important; }
+    #about h2, #services h2, #work h2, #process h2 { margin-bottom: 32px !important; font-size: clamp(28px, 8vw, 34px) !important; }
+    #contact h2 { margin-bottom: 36px !important; font-size: clamp(30px, 8.6vw, 38px) !important; }
+    /* Card cells inside the grids. */
+    #about > div > div[style*="padding:32px"],
+    #services > div > div[style*="padding:32px"],
+    #process > div > div[style*="padding:32px"] { padding: 24px 20px !important; }
+    #about h3, #services h3, #process h3 { font-size: 17px !important; }
+
+    /* ---- Hero ---- */
+    #hero-canvas-wrap { inset: 12px !important; border-radius: 24px !important; }
+    #hero-inner { padding: 36px 24px !important; gap: 32px !important; }
+    #hero-inner h1 { max-width: 100% !important; font-size: clamp(28px, 9vw, 40px) !important; }
+    #hero-inner > div { gap: 24px !important; }
+    #hero-inner > div > div { gap: 18px !important; width: 100%; }
+    #hero-inner a[href="#contact"] { display: block !important; width: 100%; text-align: center; padding: 15px 20px !important; }
+    #hero-inner p { font-size: 15px !important; }
+
+    /* ---- About ---- */
+    .about-profile { gap: 24px !important; margin-bottom: 24px !important; }
+    #about-text-col p { font-size: 16px !important; }
+
+    /* ---- Work carousel ---- */
+    #work-track { gap: 16px !important; padding-top: 12px !important; padding-bottom: 12px !important;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important;
+      mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important; }
+    .work-card { width: 82vw !important; padding: 16px !important; }
     /* On a phone-width card the arrows land almost on top of the
        screenshot itself (the wrapper they're positioned against is no
        wider than the card) — swipe already works via native touch
        scrolling, so just hide them instead of overlapping the image. */
     #work-prev, #work-next { display: none !important; }
+
+    /* ---- Contact ---- */
+    #contact h2 + div { gap: 24px !important; }
+    #copy-email-text, #contact a[href^="https://t.me/"] { font-size: 17px !important; }
+
+    /* ---- Footer & misc ---- */
+    footer > div { flex-direction: column; align-items: flex-start !important; gap: 20px !important; padding: 28px 20px !important; }
+    footer > div > div { gap: 12px 20px !important; max-width: 100%; }
+    footer a, footer span { font-size: 13px !important; overflow-wrap: anywhere; }
+    #back-to-top { width: 44px !important; height: 44px !important; right: 16px !important; bottom: 16px !important; }
+  }
+  @media (max-width: 345px) {
+    #nav-about { font-size: 13px !important; }
+  }
+  /* Tablet: the single-row nav only just overflows here, so tighten its gaps. */
+  @media (min-width: 701px) and (max-width: 900px) {
+    .nav-bar { gap: 24px !important; }
+    .nav-links { gap: 24px !important; }
+  }
+  /* Small-viewport units keep the hero inside the visible area on phones
+     whose browser chrome collapses on scroll (100vh alone overshoots). */
+  @supports (height: 100svh) {
+    @media (max-width: 700px) {
+      #hero { min-height: calc(100svh - var(--nav-h)) !important; }
+    }
   }
 </style>
 <!-- Yandex.Metrika counter -->
@@ -114,17 +175,17 @@
 <div style="background:#ffffff;color:#0a0a0a;font-family:'Unbounded',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;min-height:100vh;">
 
   <nav style="position:sticky;top:0;z-index:50;background:#ffffff;border-bottom:1px solid rgba(10,10,10,0.12);">
-    <div class="nav-bar" style="max-width:1400px;margin:0 auto;padding:14px clamp(24px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:24px;">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <div class="nav-bar" style="max-width:1400px;margin:0 auto;padding:14px clamp(24px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:36px;">
+      <div class="nav-logo" style="display:flex;flex-direction:column;align-items:center;gap:2px;">
         <a id="nav-about" href="#about" style="font-weight:800;font-size:17px;letter-spacing:0.02em;text-transform:uppercase;color:#1b17ff;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#0a0a0a;transform:translateY(-2px);">Venta Dynamics</a>
         <span style="font-size:11px;font-weight:500;letter-spacing:0.01em;color:rgba(10,10,10,0.4);white-space:nowrap;">Where Creativity Meets Code</span>
       </div>
-      <div class="nav-links" style="display:flex;align-items:center;gap:36px;flex-wrap:wrap;">
+      <div class="nav-links" style="display:flex;align-items:center;gap:36px;flex-wrap:wrap;margin-left:auto;">
         <a id="nav-services" href="#services" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Услуги</a>
         <a id="nav-work" href="#work" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Работы</a>
         <a id="nav-process" href="#process" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Процесс</a>
-        <a id="nav-contact-link" href="#contact" style="font-size:14px;font-weight:600;color:#ffffff;background:#1b17ff;padding:10px 20px;border-radius:3px;display:inline-block;transition:background .25s ease,transform .25s ease;" style-hover="background:#0a0a0a;transform:translateY(-2px);">Написать</a>
       </div>
+      <a id="nav-contact-link" class="nav-cta" href="#contact" style="font-size:14px;font-weight:600;color:#ffffff;background:#1b17ff;padding:10px 20px;border-radius:3px;display:inline-block;white-space:nowrap;transition:background .25s ease,transform .25s ease;" style-hover="background:#0a0a0a;transform:translateY(-2px);">Написать</a>
     </div>
   </nav>
 
@@ -295,7 +356,7 @@
       <div style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 100ms,transform .7s cubic-bezier(.16,1,.3,1) 100ms;display:flex;flex-wrap:wrap;gap:48px;align-items:center;">
         <div style="display:flex;align-items:center;gap:16px;">
           <a href="javascript:void(0)" id="copy-email-badge" aria-label="Скопировать email" style="position:relative;flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#ffffff;cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#ffffff;color:#0a0a0a;">@<span id="copy-email-tooltip" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:#ffffff;color:#0a0a0a;font-size:12px;font-weight:600;padding:6px 10px;border-radius:3px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;">Скопировано</span></a>
-          <a href="mailto:d.yantsevich@ventadynamics.dev" id="copy-email-text" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;overflow-wrap:anywhere;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">d.yantsevich@ventadynamics.dev</a>
+          <a href="mailto:d.yantsevich@ventadynamics.dev" id="copy-email-text" style="display:inline-block;font-size:clamp(20px,2.5vw,28px);font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:4px;overflow-wrap:anywhere;transition:color .25s ease,border-color .25s ease,transform .25s ease;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">d.yantsevich@<wbr>ventadynamics.dev</a>
         </div>
         <div style="display:flex;align-items:center;gap:16px;">
           <span style="flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.02em;">TG</span>
