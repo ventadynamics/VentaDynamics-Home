@@ -54,7 +54,7 @@
      losing those on a flaky load just looks slightly plainer. Losing these
      ones breaks layout outright, so they can't depend on helmet mounting. */
   * { box-sizing: border-box; }
-  :root { --nav-h: 84px; }
+  :root { --nav-h: 66px; }
   body { margin: 0; }
   a { color: #1b17ff; text-decoration: none; }
   a:hover { color: #0a0a0a; }
@@ -64,6 +64,7 @@
     #about-photo-box { width: 100% !important; max-width: 200px; height: auto !important; }
   }
   @media (max-width: 700px) {
+    :root { --nav-h: 110px; }
     /* ---- Nav: logo + CTA on the first row, section links on the second. ---- */
     .nav-bar { flex-wrap: wrap; height: auto !important; padding: 12px 20px !important; row-gap: 10px; column-gap: 12px !important; }
     .nav-logo { align-items: flex-start !important; order: 0; flex: 1 1 0; min-width: 0; }
@@ -573,16 +574,38 @@ class Component extends DCLogic {
     // for real instead of hardcoded — otherwise hero (and every other
     // section) end up too tall/short and anchor scrolling lands in the
     // wrong place.
-    const nav = document.querySelector("nav");
-    if (!nav) return;
     const root = document.documentElement;
-    const sync = () => root.style.setProperty("--nav-h", nav.offsetHeight + "px");
+    let observed = null;
+    let ro = null;
+    const sync = () => {
+      // Always re-query: the framework can replace the nav node after we
+      // first saw it, and a reference to the old one would measure 0 forever.
+      const nav = document.querySelector("#dc-root nav") || document.querySelector("nav");
+      if (!nav) return;
+      const h = nav.offsetHeight;
+      // A hidden/unmounted nav measures 0 — never write that: it would make
+      // the hero a full nav-height taller than the viewport.
+      if (h > 0) root.style.setProperty("--nav-h", h + "px");
+      if ("ResizeObserver" in window && nav !== observed) {
+        if (ro) ro.disconnect();
+        ro = new ResizeObserver(sync);
+        ro.observe(nav);
+        observed = nav;
+      }
+    };
     sync();
-    if ("ResizeObserver" in window) {
-      new ResizeObserver(sync).observe(nav);
-    } else {
-      window.addEventListener("resize", sync);
-    }
+    window.addEventListener("resize", sync);
+    window.addEventListener("orientationchange", sync);
+    window.addEventListener("load", sync);
+    window.addEventListener("hero-dom-ready", sync);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+    // Re-check node identity for a while after boot, like the carousel does.
+    let checks = 0;
+    const identityTimer = setInterval(() => {
+      checks += 1;
+      sync();
+      if (checks >= 40) clearInterval(identityTimer);
+    }, 250);
   }
 
   function initScrollProgress() {
@@ -1026,11 +1049,33 @@ class Component extends DCLogic {
       boot();
     }, { once: true });
   }
-  // Safety net in case the event is missed for some other reason.
-  setTimeout(() => {
-    wlog("boot path: 300ms timeout fallback firing");
-    boot();
-  }, 300);
+  // Safety net in case the event is missed for some other reason. This
+  // used to be a flat 300ms timeout, which on a slow CDN fired BEFORE the
+  // framework had mounted: every init then bound to the hidden <x-dc>
+  // template nodes (which get thrown away), and --nav-h was measured from
+  // an invisible nav as 0px — making the hero a full nav-height taller
+  // than the screen, and leaving the active-nav highlight, back-to-top
+  // button and scroll progress bar dead. So instead poll for the real,
+  // mounted DOM (the template is replaced by #dc-root and a visible nav).
+  const domMounted = () =>
+    !!window.__heroDomReady ||
+    (!document.querySelector("x-dc") && !!document.querySelector("#dc-root nav"));
+  let bootPolls = 0;
+  const bootPoll = setInterval(() => {
+    bootPolls += 1;
+    if (booted.size) { clearInterval(bootPoll); return; }
+    if (domMounted()) {
+      clearInterval(bootPoll);
+      wlog("boot path: poll detected mounted DOM");
+      boot();
+      return;
+    }
+    if (bootPolls >= 150) { // 30s: framework never mounted; boot anyway as a last resort
+      clearInterval(bootPoll);
+      wlog("boot path: give-up fallback firing");
+      boot();
+    }
+  }, 200);
 </script>
 </body>
 </html>
