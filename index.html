@@ -190,16 +190,18 @@
   .partner-feats li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.5; color: rgba(10,10,10,0.72); }
   .partner-feats li::before { content: ""; position: absolute; left: 3px; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: #1b17ff; }
   .partner-result { margin: 18px 0 0; font-size: 14px; font-weight: 600; color: #0a0a0a; }
-  .partner-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; align-content: start; }
-  .partner-shot { aspect-ratio: 16/10; background: rgba(10,10,10,0.06); border: 1px solid rgba(10,10,10,0.10); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(10,10,10,0.3); font-size: 12px; letter-spacing: 0.04em; overflow: hidden; }
-  .partner-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* One mockup per partner, contained in a fixed-height box so every panel
+     keeps the same height regardless of the image. */
+  .partner-shots { display: flex; align-items: center; justify-content: center; height: 460px; }
+  .partner-shots img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 16px; display: block; }
   @media (max-width: 700px) {
     .logo-grid { grid-template-columns: repeat(1, 1fr) !important; }
     .logo-cell { padding: 40px 16px !important; min-height: 180px !important; }
     .logo-cell img { height: calc(var(--logo-h, 96px) * 0.9) !important; max-width: 72% !important; }
     .logo-plus { display: none !important; }
     .partner-detail { grid-template-columns: 1fr !important; gap: 24px !important; min-height: 0 !important; }
-    .partner-shots { grid-template-columns: repeat(2, 1fr) !important; }
+    .partner-shots { height: auto !important; }
+    .partner-shots img { max-height: 60vh !important; }
   }
 </style>
 <!-- Yandex.Metrika counter -->
@@ -354,9 +356,7 @@
             </ul>
           </div>
           <div class="partner-shots">
-            <div class="partner-shot">турнирная сетка</div>
-            <div class="partner-shot">рейтинг игроков</div>
-            <div class="partner-shot">командный профиль</div>
+            <img src="./assets/mockups/pavaga.webp" alt="PAVAGA PLAY — профиль игрока и рейтинг" loading="lazy">
           </div>
         </div>
 
@@ -375,9 +375,7 @@
             </ul>
           </div>
           <div class="partner-shots">
-            <div class="partner-shot">меню</div>
-            <div class="partner-shot">карта лояльности</div>
-            <div class="partner-shot">акции</div>
+            <img src="./assets/mockups/letitbe.webp" alt="Let it be — экран меню" loading="lazy">
           </div>
         </div>
 
@@ -397,9 +395,7 @@
             <p class="partner-result">Первая неделя в App Store — 3700+ установок. Версия для Android в тестировании.</p>
           </div>
           <div class="partner-shots">
-            <div class="partner-shot">расписание</div>
-            <div class="partner-shot">оценки</div>
-            <div class="partner-shot">главная</div>
+            <img src="./assets/mockups/bsmu.webp" alt="Студент БГМУ — расписание" loading="lazy">
           </div>
         </div>
         </div>
