@@ -181,7 +181,7 @@
   }
   .partner-cat { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1b17ff; margin: 0 0 12px; }
   .partner-detail h4 { font-size: clamp(22px,2.4vw,30px); font-weight: 800; letter-spacing: -0.01em; margin: 0 0 6px; }
-  .partner-link { display: inline-block; font-size: 14px; font-weight: 600; color: #1b17ff; margin: 0 0 4px; border-bottom: 1px solid transparent; transition: border-color .2s ease; }
+  .partner-link { display: inline-block; font-size: 14px; font-weight: 600; color: #1b17ff; margin: 0 0 24px; border-bottom: 1px solid transparent; transition: border-color .2s ease; }
   .partner-link:hover { border-color: #1b17ff; }
   .partner-client { font-size: 14px; color: rgba(10,10,10,0.5); margin: 0 0 24px; }
   .partner-desc { font-size: 16px; line-height: 1.65; color: rgba(10,10,10,0.65); margin: 0 0 26px; max-width: 560px; }
@@ -199,9 +199,12 @@
     .logo-cell { padding: 40px 16px !important; min-height: 180px !important; }
     .logo-cell img { height: calc(var(--logo-h, 96px) * 0.9) !important; max-width: 72% !important; }
     .logo-plus { display: none !important; }
-    .partner-detail { grid-template-columns: 1fr !important; gap: 24px !important; min-height: 0 !important; }
+    /* On phones only the active detail is in flow (natural height), so a
+       short card no longer stretches to the tallest one's height. */
+    .partner-detail:not(.show) { display: none !important; }
+    .partner-detail { grid-template-columns: 1fr !important; gap: 22px !important; min-height: 0 !important; }
     .partner-shots { height: auto !important; }
-    .partner-shots img { max-height: 60vh !important; }
+    .partner-shots img { max-height: 56vh !important; }
   }
 </style>
 <!-- Yandex.Metrika counter -->
@@ -346,7 +349,6 @@
             <div class="partner-cat">Веб-платформа · киберспорт</div>
             <h4>PAVAGA PLAY</h4>
             <a class="partner-link" href="https://play.pavaga.gg" target="_blank" rel="noopener">play.pavaga.gg ↗</a>
-            <p class="partner-client">Компьютерный клуб</p>
             <p class="partner-desc">Турниры, команды и рейтинги игроков — всё в одном месте. Пришли с одной идеей, но в разговоре разобрались, что клубу нужнее, и собрали платформу под реальную задачу бизнеса.</p>
             <div class="partner-feats-label">Что внутри</div>
             <ul class="partner-feats">
@@ -365,7 +367,6 @@
             <div class="partner-cat">Мобильное приложение · iOS</div>
             <h4>Let it be</h4>
             <a class="partner-link" href="https://apps.apple.com/us/app/let-it-be/id6787946240" target="_blank" rel="noopener">App Store ↗</a>
-            <p class="partner-client">Кафе-пекарня, Минск</p>
             <p class="partner-desc">Приложение кафе-пекарни: электронное меню, программа лояльности, новости и акции, push-уведомления. Перенесли лояльность туда, где клиент всегда — в телефон.</p>
             <div class="partner-feats-label">Что внутри</div>
             <ul class="partner-feats">
@@ -381,10 +382,9 @@
 
         <div class="partner-detail" data-partner="bsmu">
           <div class="partner-detail-text">
-            <div class="partner-cat">Мобильное приложение · iOS</div>
+            <div class="partner-cat">Мобильное приложение · iOS · Волонтёрский проект</div>
             <h4>Студент БГМУ</h4>
             <a class="partner-link" href="https://apps.apple.com/us/app/%D1%81%D1%82%D1%83%D0%B4%D0%B5%D0%BD%D1%82-%D0%B1%D0%B3%D0%BC%D1%83/id6809048316" target="_blank" rel="noopener">App Store ↗</a>
-            <p class="partner-client">Волонтёрский проект</p>
             <p class="partner-desc">Приложение для студентов медуниверситета: расписание, оценки, деканат, оплаты — всё в одном месте и работает офлайн. Началось как помощь одному человеку — а за первую неделю разошлось по всему вузу.</p>
             <div class="partner-feats-label">Что внутри</div>
             <ul class="partner-feats">
