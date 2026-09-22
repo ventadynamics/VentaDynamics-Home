@@ -123,8 +123,10 @@
   .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
   .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 16px; min-height: 128px; position: relative; overflow: hidden; isolation: isolate; }
   .logo-cell.alt { background: #f7f7f9; }
-  .logo-cell img { position: relative; z-index: 1; height: 24px; width: auto; max-width: 80%; opacity: 0.88; transition: opacity .25s ease, transform .25s ease; }
-  .logo-cell:hover img { opacity: 1; transform: translateY(-3px); }
+  /* Partner logos: monochrome + faded at rest, full color + slightly scaled
+     on hover (paired with the brand-colored pixel ripple behind them). */
+  .logo-cell img { position: relative; z-index: 1; height: 28px; width: auto; max-width: 78%; filter: grayscale(1); opacity: 0.5; transition: filter .3s ease, opacity .3s ease, transform .3s ease; }
+  .logo-cell:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.06); }
   /* Pixel-shimmer canvas: fills the cell behind the logo/placeholder and
      ripples in the client's brand color on hover (driven by initPixelGrids). */
   .pixel-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
