@@ -85,7 +85,11 @@
        (the old [style*="padding:32px"] selector never matched the real
        "padding:36px 32px" value, so this stayed broken). */
     .card-grid > div { padding: 26px 0 !important; }
-    #about h3, #services h3, #process h3 { font-size: 17px !important; }
+    #about h3, #services h3 { font-size: 17px !important; }
+    /* Process timeline: stack head above description on phones. */
+    .process-step { flex-direction: column !important; gap: 10px !important; padding: 24px 0 !important; }
+    .process-step-head { flex-basis: auto !important; }
+    #process .process-step h3 { font-size: 19px !important; }
 
     /* ---- Hero ---- */
     #hero-canvas-wrap { inset: 12px !important; border-radius: 24px !important; }
@@ -303,36 +307,41 @@
     <div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">04 — Как работаем</div>
     <h2 style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 40px;">Не усложняем процесс ради процесса.</h2>
     <p style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 120ms,transform .7s cubic-bezier(.16,1,.3,1) 120ms;max-width:720px;margin:0 0 56px;font-size:clamp(17px,1.8vw,19px);color:rgba(10,10,10,0.65);line-height:1.55;">Пять понятных этапов. Без бюрократии и бесконечных согласований.</p>
-    <div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
-      <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:14px;">
-        <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Разбираем задачу</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Сначала выясняем, что действительно нужно сделать. Что сейчас не работает? Где бизнес теряет время? Что должен получить клиент на выходе? Иногда выясняется, что вам вообще не нужен тот продукт, с которым вы пришли, — и это нормально.</p>
+    <div class="process-timeline" style="border-bottom:1px solid rgba(10,10,10,0.12);">
+      <div class="process-step" style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;gap:clamp(24px,5vw,72px);padding:clamp(26px,3vw,38px) 0;border-top:1px solid rgba(10,10,10,0.12);">
+        <div class="process-step-head" style="flex:0 0 clamp(240px,30%,360px);display:flex;flex-direction:column;gap:10px;">
+          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
+          <h3 style="font-size:clamp(22px,2.4vw,28px);font-weight:700;letter-spacing:-0.01em;margin:0;">Разбираем задачу</h3>
         </div>
+        <p style="flex:1;margin:0;max-width:680px;font-size:16px;line-height:1.65;color:rgba(10,10,10,0.6);">Сначала выясняем, что действительно нужно сделать. Что сейчас не работает? Где бизнес теряет время? Что должен получить клиент на выходе? Иногда выясняется, что вам вообще не нужен тот продукт, с которым вы пришли, — и это нормально.</p>
       </div>
-      <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;display:flex;flex-direction:column;gap:14px;">
-        <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Собираем решение</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Определяем структуру, сценарии и формат продукта. Не начинаем писать код просто потому, что уже хочется писать код. Сначала понимаем, что именно строим.</p>
+      <div class="process-step" style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;display:flex;gap:clamp(24px,5vw,72px);padding:clamp(26px,3vw,38px) 0;border-top:1px solid rgba(10,10,10,0.12);">
+        <div class="process-step-head" style="flex:0 0 clamp(240px,30%,360px);display:flex;flex-direction:column;gap:10px;">
+          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
+          <h3 style="font-size:clamp(22px,2.4vw,28px);font-weight:700;letter-spacing:-0.01em;margin:0;">Собираем решение</h3>
         </div>
+        <p style="flex:1;margin:0;max-width:680px;font-size:16px;line-height:1.65;color:rgba(10,10,10,0.6);">Определяем структуру, сценарии и формат продукта. Не начинаем писать код просто потому, что уже хочется писать код. Сначала понимаем, что именно строим.</p>
       </div>
-      <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;display:flex;flex-direction:column;gap:14px;">
-        <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Разрабатываем</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Работаем короткими этапами и регулярно показываем результат. Небольшой сайт можно собрать за несколько дней, крупный продукт разбиваем на понятные недельные спринты. Вы всегда понимаете, что происходит и что будет дальше.</p>
+      <div class="process-step" style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;display:flex;gap:clamp(24px,5vw,72px);padding:clamp(26px,3vw,38px) 0;border-top:1px solid rgba(10,10,10,0.12);">
+        <div class="process-step-head" style="flex:0 0 clamp(240px,30%,360px);display:flex;flex-direction:column;gap:10px;">
+          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
+          <h3 style="font-size:clamp(22px,2.4vw,28px);font-weight:700;letter-spacing:-0.01em;margin:0;">Разрабатываем</h3>
         </div>
+        <p style="flex:1;margin:0;max-width:680px;font-size:16px;line-height:1.65;color:rgba(10,10,10,0.6);">Работаем короткими этапами и регулярно показываем результат. Небольшой сайт можно собрать за несколько дней, крупный продукт разбиваем на понятные недельные спринты. Вы всегда понимаете, что происходит и что будет дальше.</p>
       </div>
-      <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 240ms,transform .7s cubic-bezier(.16,1,.3,1) 240ms;display:flex;flex-direction:column;gap:14px;">
-        <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">04</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Проверяем</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Тестируем не только глазами. Проходим реальные сценарии, ищем проблемы, исправляем и доводим продукт до состояния, в котором им можно пользоваться.</p>
+      <div class="process-step" style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 240ms,transform .7s cubic-bezier(.16,1,.3,1) 240ms;display:flex;gap:clamp(24px,5vw,72px);padding:clamp(26px,3vw,38px) 0;border-top:1px solid rgba(10,10,10,0.12);">
+        <div class="process-step-head" style="flex:0 0 clamp(240px,30%,360px);display:flex;flex-direction:column;gap:10px;">
+          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">04</span>
+          <h3 style="font-size:clamp(22px,2.4vw,28px);font-weight:700;letter-spacing:-0.01em;margin:0;">Проверяем</h3>
         </div>
+        <p style="flex:1;margin:0;max-width:680px;font-size:16px;line-height:1.65;color:rgba(10,10,10,0.6);">Тестируем не только глазами. Проходим реальные сценарии, ищем проблемы, исправляем и доводим продукт до состояния, в котором им можно пользоваться.</p>
       </div>
-      <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 320ms,transform .7s cubic-bezier(.16,1,.3,1) 320ms;display:flex;flex-direction:column;gap:14px;">
-        <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">05</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Запускаем</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Продукт должен выйти из чата в реальный мир. Помогаем с запуском, публикацией и дальнейшими обновлениями. После релиза не исчезаем.</p>
+      <div class="process-step" style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 320ms,transform .7s cubic-bezier(.16,1,.3,1) 320ms;display:flex;gap:clamp(24px,5vw,72px);padding:clamp(26px,3vw,38px) 0;border-top:1px solid rgba(10,10,10,0.12);">
+        <div class="process-step-head" style="flex:0 0 clamp(240px,30%,360px);display:flex;flex-direction:column;gap:10px;">
+          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">05</span>
+          <h3 style="font-size:clamp(22px,2.4vw,28px);font-weight:700;letter-spacing:-0.01em;margin:0;">Запускаем</h3>
         </div>
+        <p style="flex:1;margin:0;max-width:680px;font-size:16px;line-height:1.65;color:rgba(10,10,10,0.6);">Продукт должен выйти из чата в реальный мир. Помогаем с запуском, публикацией и дальнейшими обновлениями. После релиза не исчезаем.</p>
       </div>
     </div>
   </section>
