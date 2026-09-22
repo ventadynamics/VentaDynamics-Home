@@ -676,7 +676,11 @@ class Component extends DCLogic {
     const h1 = document.querySelector("#hero-title");
     if (!h1) return;
     h1.dataset.animated = "1";
-    const words = h1.textContent.trim().split(/\s+/);
+    // Split on regular whitespace only, NOT non-breaking spaces ( ):
+    // \s would eat the typographic nbsps we add (e.g. "бизнеса —"),
+    // letting the dash wrap to the start of a line. Keeping nbsp inside a
+    // token makes that token a single unbreakable inline-block.
+    const words = h1.textContent.trim().split(/[^\S ]+/);
     h1.textContent = "";
     words.forEach((word, i) => {
       const span = document.createElement("span");
