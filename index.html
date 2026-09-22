@@ -121,12 +121,15 @@
   }
   /* ---- Logo cloud / partners grid ---- */
   .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
-  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 16px; min-height: 128px; }
+  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 16px; min-height: 128px; position: relative; overflow: hidden; isolation: isolate; }
   .logo-cell.alt { background: #f7f7f9; }
-  .logo-cell img { height: 24px; width: auto; max-width: 80%; opacity: 0.88; transition: opacity .25s ease, transform .25s ease; }
+  .logo-cell img { position: relative; z-index: 1; height: 24px; width: auto; max-width: 80%; opacity: 0.88; transition: opacity .25s ease, transform .25s ease; }
   .logo-cell:hover img { opacity: 1; transform: translateY(-3px); }
+  /* Pixel-shimmer canvas: fills the cell behind the logo/placeholder and
+     ripples in the client's brand color on hover (driven by initPixelGrids). */
+  .pixel-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
   /* Placeholder shown until a real partner logo is added. */
-  .logo-skeleton { width: min(60%, 120px); height: 30px; border-radius: 6px; background: rgba(10,10,10,0.08); }
+  .logo-skeleton { position: relative; z-index: 1; width: min(60%, 120px); height: 30px; border-radius: 6px; background: rgba(10,10,10,0.08); }
   .logo-plus { position: absolute; top: 50%; transform: translate(-50%, -50%); color: rgba(10,10,10,0.28); font-size: 22px; font-weight: 400; line-height: 1; pointer-events: none; z-index: 3; }
   @media (max-width: 700px) {
     .logo-grid { grid-template-columns: repeat(1, 1fr) !important; }
@@ -247,10 +250,14 @@
     <div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">02 — Партнёры</div>
     <h2 style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 40px;">С кем работаем</h2>
     <p style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 120ms,transform .7s cubic-bezier(.16,1,.3,1) 120ms;max-width:720px;margin:0 0 56px;font-size:clamp(17px,1.8vw,19px);color:rgba(10,10,10,0.65);line-height:1.55;">Мы называем их партнёрами не ради красивого слова. У каждого проекта есть человек с другой стороны, который лучше всех знает свой бизнес. Мы знаем разработку, вы знаете свой продукт, клиентов и процессы. Хороший результат появляется, когда эти две стороны работают вместе.</p>
+    <!-- Partner slots. Each cell's data-colors is the client's brand palette,
+         used by the pixel-shimmer hover effect (see initPixelGrids below).
+         Swap the placeholder palettes for the real brand colors when a logo
+         is added, e.g. data-colors="#e2001a,#ff5a5f". -->
     <div class="logo-grid" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 180ms,transform .7s cubic-bezier(.16,1,.3,1) 180ms;position:relative;">
-      <div class="logo-cell alt"><div class="logo-skeleton"></div></div>
-      <div class="logo-cell"><div class="logo-skeleton"></div></div>
-      <div class="logo-cell alt"><div class="logo-skeleton"></div></div>
+      <div class="logo-cell alt" data-colors="#1b17ff,#4b48ff,#7a5cff"><canvas class="pixel-canvas"></canvas><div class="logo-skeleton"></div></div>
+      <div class="logo-cell" data-colors="#10b981,#34d399,#6ee7b7"><canvas class="pixel-canvas"></canvas><div class="logo-skeleton"></div></div>
+      <div class="logo-cell alt" data-colors="#f59e0b,#fbbf24,#fcd34d"><canvas class="pixel-canvas"></canvas><div class="logo-skeleton"></div></div>
       <span class="logo-plus" style="left:33.333%;">+</span>
       <span class="logo-plus" style="left:66.666%;">+</span>
     </div>
@@ -722,6 +729,158 @@ class Component extends DCLogic {
     });
   }
 
+  // --- Pixel-shimmer hover effect for the partners grid ---------------------
+  // Vanilla port of the React "pixel canvas" pattern: on hover each cell fills
+  // with tiny squares that ripple out from the center in the client's brand
+  // color, then fade out on leave. Colors come from the cell's data-colors.
+  function makePixel(ctx, w, h, x, y, color, baseSpeed, delay) {
+    const rand = (min, max) => Math.random() * (max - min) + min;
+    const p = {
+      x, y, color,
+      speed: rand(0.1, 0.9) * baseSpeed,
+      size: 0,
+      sizeStep: Math.random() * 0.4,
+      minSize: 0.5,
+      maxSizeInt: 2,
+      maxSize: rand(0.5, 2),
+      delay,
+      counter: 0,
+      counterStep: Math.random() * 4 + (w + h) * 0.01,
+      isIdle: false,
+      isReverse: false,
+      isShimmer: false,
+      draw() {
+        const offset = p.maxSizeInt * 0.5 - p.size * 0.5;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x + offset, p.y + offset, p.size, p.size);
+      },
+      appear() {
+        p.isIdle = false;
+        if (p.counter <= p.delay) { p.counter += p.counterStep; return; }
+        if (p.size >= p.maxSize) p.isShimmer = true;
+        if (p.isShimmer) p.shimmer();
+        else p.size += p.sizeStep;
+        p.draw();
+      },
+      disappear() {
+        p.isShimmer = false;
+        p.counter = 0;
+        if (p.size <= 0) { p.isIdle = true; return; }
+        p.size -= 0.1;
+        p.draw();
+      },
+      shimmer() {
+        if (p.size >= p.maxSize) p.isReverse = true;
+        else if (p.size <= p.minSize) p.isReverse = false;
+        if (p.isReverse) p.size -= p.speed;
+        else p.size += p.speed;
+      },
+    };
+    return p;
+  }
+
+  function createPixelField(canvas, cell) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const gap = 5;
+    const baseSpeed = Math.min(30, 100) * 0.001;
+    let pixels = [];
+    let raf = 0;
+    let last = performance.now();
+
+    function build() {
+      const rect = cell.getBoundingClientRect();
+      const w = Math.floor(rect.width);
+      const h = Math.floor(rect.height);
+      if (!w || !h) return false;
+      canvas.width = w;
+      canvas.height = h;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      const colors = (cell.dataset.colors || "#1b17ff")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      pixels = [];
+      for (let x = 0; x < w; x += gap) {
+        for (let y = 0; y < h; y += gap) {
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const dx = x - w / 2;
+          const dy = y - h / 2;
+          const delay = reduced ? 0 : Math.sqrt(dx * dx + dy * dy);
+          pixels.push(makePixel(ctx, w, h, x, y, color, baseSpeed, delay));
+        }
+      }
+      return true;
+    }
+
+    function ensureBuilt() {
+      const rect = cell.getBoundingClientRect();
+      if (!pixels.length || canvas.width !== Math.floor(rect.width) || canvas.height !== Math.floor(rect.height)) {
+        return build();
+      }
+      return true;
+    }
+
+    function loop(mode) {
+      cancelAnimationFrame(raf);
+      const frameInterval = 1000 / 60;
+      const step = () => {
+        raf = requestAnimationFrame(step);
+        const now = performance.now();
+        const elapsed = now - last;
+        if (elapsed < frameInterval) return;
+        last = now - (elapsed % frameInterval);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const p of pixels) p[mode]();
+        if (pixels.every((p) => p.isIdle)) cancelAnimationFrame(raf);
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    return {
+      appear() {
+        if (reduced) return;
+        if (!ensureBuilt()) return;
+        loop("appear");
+      },
+      disappear() {
+        if (reduced || !pixels.length) return;
+        loop("disappear");
+      },
+    };
+  }
+
+  function initPixelGrids() {
+    // A cell's canvas can be swapped out when the framework re-renders the
+    // {{ workStyle }}-bound grid, so bind hover on document (delegation) and
+    // (re)create the field on whatever canvas is live in the cell right now.
+    const fieldFor = (cell) => {
+      const canvas = cell.querySelector("canvas.pixel-canvas");
+      if (!canvas) return null;
+      if (!canvas.__pixelField) canvas.__pixelField = createPixelField(canvas, cell);
+      return canvas.__pixelField;
+    };
+    let hovered = null;
+    document.addEventListener("mouseover", (e) => {
+      const cell = e.target.closest && e.target.closest(".logo-grid .logo-cell");
+      if (!cell || cell === hovered) return;
+      hovered = cell;
+      const field = fieldFor(cell);
+      if (field) field.appear();
+    });
+    document.addEventListener("mouseout", (e) => {
+      const cell = e.target.closest && e.target.closest(".logo-grid .logo-cell");
+      if (!cell) return;
+      const to = e.relatedTarget;
+      if (to && cell.contains(to)) return; // moved within the same cell
+      if (cell === hovered) hovered = null;
+      const field = fieldFor(cell);
+      if (field) field.disappear();
+    });
+  }
+
   // Lightweight boot-path logger, silent in production (flip WORK_DEBUG to
   // true to trace the framework mount/boot sequence in the console).
   const WORK_DEBUG = false;
@@ -766,6 +925,10 @@ class Component extends DCLogic {
     if (!booted.has("copy-email")) {
       booted.add("copy-email");
       initCopyEmail();
+    }
+    if (!booted.has("pixel-grids")) {
+      booted.add("pixel-grids");
+      initPixelGrids();
     }
   }
   // The component framework can re-render/replace DOM nodes after first
