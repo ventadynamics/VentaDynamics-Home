@@ -127,25 +127,46 @@
   }
   /* ---- Logo cloud / partners grid ---- */
   .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
-  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 24px; min-height: 220px; position: relative; overflow: hidden; isolation: isolate; }
+  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 24px; min-height: 220px; position: relative; overflow: hidden; isolation: isolate; cursor: pointer; }
   .logo-cell.alt { background: #f7f7f9; }
+  .logo-cell:focus-visible { outline: 2px solid #1b17ff; outline-offset: -2px; }
   /* Partner logos: monochrome + faded at rest, full color + slightly scaled
      on hover (paired with the brand-colored pixel ripple behind them).
      Each cell sets its own --logo-h so wordmarks and square emblems are
      optically balanced against each other rather than a single fixed height. */
   .logo-cell img { position: relative; z-index: 1; height: var(--logo-h, 96px); width: auto; max-width: 84%; filter: grayscale(1); opacity: 0.5; transition: filter .3s ease, opacity .3s ease, transform .3s ease; }
   .logo-cell:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.06); }
+  /* Open (selected) partner: logo stays highlighted while its panel is shown. */
+  .logo-cell.is-open img { filter: grayscale(0); opacity: 1; }
   /* Pixel-shimmer canvas: fills the cell behind the logo/placeholder and
      ripples in the client's brand color on hover (driven by initPixelGrids). */
   .pixel-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
   /* Placeholder shown until a real partner logo is added. */
   .logo-skeleton { position: relative; z-index: 1; width: min(55%, 160px); height: 48px; border-radius: 8px; background: rgba(10,10,10,0.08); }
   .logo-plus { position: absolute; top: 50%; transform: translate(-50%, -50%); color: rgba(10,10,10,0.28); font-size: 22px; font-weight: 400; line-height: 1; pointer-events: none; z-index: 3; }
+  /* ---- Partner detail panel (expands on click) ---- */
+  .partner-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.16,1,.3,1); border: 1px solid rgba(10,10,10,0.12); border-top: 0; }
+  .partner-panel:not(.open) { border-color: transparent; }
+  .partner-panel.open { grid-template-rows: 1fr; }
+  .partner-panel-clip { overflow: hidden; }
+  .partner-panel-inner { position: relative; padding: clamp(28px,3.5vw,48px) clamp(20px,3vw,40px); }
+  .partner-close { position: absolute; top: 16px; right: 16px; background: none; border: 1px solid rgba(10,10,10,0.2); border-radius: 3px; padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 600; color: rgba(10,10,10,0.6); cursor: pointer; transition: color .2s ease, border-color .2s ease; }
+  .partner-close:hover { color: #0a0a0a; border-color: #0a0a0a; }
+  .partner-detail { display: grid; grid-template-columns: minmax(220px,1fr) 1.5fr; gap: clamp(24px,4vw,56px); align-items: start; }
+  .partner-detail[hidden] { display: none; }
+  .partner-cat { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1b17ff; margin: 0 0 12px; }
+  .partner-detail h4 { font-size: clamp(22px,2.4vw,30px); font-weight: 800; letter-spacing: -0.01em; margin: 0 0 14px; }
+  .partner-desc { font-size: 16px; line-height: 1.65; color: rgba(10,10,10,0.65); margin: 0; max-width: 520px; }
+  .partner-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; }
+  .partner-shot { aspect-ratio: 16/10; background: rgba(10,10,10,0.06); border: 1px solid rgba(10,10,10,0.10); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(10,10,10,0.3); font-size: 12px; letter-spacing: 0.04em; overflow: hidden; }
+  .partner-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
   @media (max-width: 700px) {
     .logo-grid { grid-template-columns: repeat(1, 1fr) !important; }
     .logo-cell { padding: 40px 16px !important; min-height: 180px !important; }
     .logo-cell img { height: calc(var(--logo-h, 96px) * 0.9) !important; max-width: 72% !important; }
     .logo-plus { display: none !important; }
+    .partner-detail { grid-template-columns: 1fr !important; gap: 24px !important; }
+    .partner-shots { grid-template-columns: repeat(2, 1fr) !important; }
   }
 </style>
 <!-- Yandex.Metrika counter -->
@@ -269,12 +290,60 @@
          is added, e.g. data-colors="#e2001a,#ff5a5f". -->
     <div class="logo-grid" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 180ms,transform .7s cubic-bezier(.16,1,.3,1) 180ms;position:relative;">
       <!-- Slot 1: PAVAGA — red brand ripple -->
-      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#c20f1b,#e63946,#8a0a12"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/pavaga.png" alt="PAVAGA" loading="lazy"></div>
-      <div class="logo-cell" style="--logo-h:64px" data-colors="#004d1e,#0a7a37,#2f9c57"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/letitbe.png" alt="Let it be" loading="lazy"></div>
+      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#c20f1b,#e63946,#8a0a12" data-partner="pavaga" role="button" tabindex="0" aria-expanded="false" aria-controls="partner-panel"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/pavaga.png" alt="PAVAGA" loading="lazy"></div>
+      <div class="logo-cell" style="--logo-h:64px" data-colors="#004d1e,#0a7a37,#2f9c57" data-partner="letitbe" role="button" tabindex="0" aria-expanded="false" aria-controls="partner-panel"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/letitbe.png" alt="Let it be" loading="lazy"></div>
       <!-- Slot 3: БДМУ — blue brand ripple -->
-      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#46509b,#6b74bd,#e32428"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/bsmu.png" alt="БДМУ" loading="lazy"></div>
+      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#46509b,#6b74bd,#e32428" data-partner="bsmu" role="button" tabindex="0" aria-expanded="false" aria-controls="partner-panel"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/bsmu.png" alt="БДМУ" loading="lazy"></div>
       <span class="logo-plus" style="left:33.333%;">+</span>
       <span class="logo-plus" style="left:66.666%;">+</span>
+    </div>
+
+    <!-- Detail panel: expands on click, shows the selected partner's info.
+         Fill each .partner-detail with real copy and swap .partner-shot
+         placeholders for <img> screenshots. -->
+    <div class="partner-panel" id="partner-panel">
+      <div class="partner-panel-clip"><div class="partner-panel-inner">
+        <button type="button" class="partner-close" aria-label="Свернуть">Свернуть ✕</button>
+
+        <div class="partner-detail" data-partner="pavaga" hidden>
+          <div class="partner-detail-text">
+            <div class="partner-cat">Киберспортивная платформа</div>
+            <h4>PAVAGA</h4>
+            <p class="partner-desc">Турниры, команды, игроки и рейтинги в одном продукте.<!-- TODO: развёрнутое описание задачи и решения --></p>
+          </div>
+          <div class="partner-shots">
+            <div class="partner-shot">скриншот</div>
+            <div class="partner-shot">скриншот</div>
+            <div class="partner-shot">скриншот</div>
+          </div>
+        </div>
+
+        <div class="partner-detail" data-partner="letitbe" hidden>
+          <div class="partner-detail-text">
+            <div class="partner-cat">Проект</div>
+            <h4>Let it be</h4>
+            <p class="partner-desc">Описание проекта для Let it be.<!-- TODO: чем занимается клиент и что сделали --></p>
+          </div>
+          <div class="partner-shots">
+            <div class="partner-shot">скриншот</div>
+            <div class="partner-shot">скриншот</div>
+            <div class="partner-shot">скриншот</div>
+          </div>
+        </div>
+
+        <div class="partner-detail" data-partner="bsmu" hidden>
+          <div class="partner-detail-text">
+            <div class="partner-cat">Образование</div>
+            <h4>БДМУ</h4>
+            <p class="partner-desc">Белорусский государственный медицинский университет.<!-- TODO: описание проекта --></p>
+          </div>
+          <div class="partner-shots">
+            <div class="partner-shot">скриншот</div>
+            <div class="partner-shot">скриншот</div>
+            <div class="partner-shot">скриншот</div>
+          </div>
+        </div>
+      </div></div>
     </div>
   </section>
 
@@ -878,8 +947,9 @@ class Component extends DCLogic {
 
   function initPixelGrids() {
     // A cell's canvas can be swapped out when the framework re-renders the
-    // {{ workStyle }}-bound grid, so bind hover on document (delegation) and
-    // (re)create the field on whatever canvas is live in the cell right now.
+    // {{ workStyle }}-bound grid, so bind everything on document (delegation)
+    // and (re)create the field on whatever canvas is live in the cell now.
+    const CELL = ".logo-grid .logo-cell";
     const fieldFor = (cell) => {
       const canvas = cell.querySelector("canvas.pixel-canvas");
       if (!canvas) return null;
@@ -887,21 +957,70 @@ class Component extends DCLogic {
       return canvas.__pixelField;
     };
     let hovered = null;
+    // A cell shows its pixels while hovered OR while open (selected).
+    const active = (cell) => cell === hovered || cell.classList.contains("is-open");
+    const refresh = (cell) => {
+      const f = fieldFor(cell);
+      if (!f) return;
+      if (active(cell)) f.appear();
+      else f.disappear();
+    };
+
+    const panel = () => document.querySelector("#partner-panel");
+    const openCells = () => document.querySelectorAll(CELL + ".is-open");
+    const closeCell = (cell) => {
+      cell.classList.remove("is-open");
+      cell.setAttribute("aria-expanded", "false");
+      refresh(cell);
+    };
+    const toggle = (cell) => {
+      const p = panel();
+      if (cell.classList.contains("is-open")) {
+        if (p) p.classList.remove("open");
+        closeCell(cell);
+        return;
+      }
+      openCells().forEach(closeCell);
+      const key = cell.dataset.partner;
+      if (p) {
+        p.querySelectorAll(".partner-detail").forEach((d) => { d.hidden = d.dataset.partner !== key; });
+        p.classList.add("open");
+      }
+      cell.classList.add("is-open");
+      cell.setAttribute("aria-expanded", "true");
+      refresh(cell);
+    };
+
     document.addEventListener("mouseover", (e) => {
-      const cell = e.target.closest && e.target.closest(".logo-grid .logo-cell");
+      const cell = e.target.closest && e.target.closest(CELL);
       if (!cell || cell === hovered) return;
+      const prev = hovered;
       hovered = cell;
-      const field = fieldFor(cell);
-      if (field) field.appear();
+      if (prev) refresh(prev);
+      refresh(cell);
     });
     document.addEventListener("mouseout", (e) => {
-      const cell = e.target.closest && e.target.closest(".logo-grid .logo-cell");
+      const cell = e.target.closest && e.target.closest(CELL);
       if (!cell) return;
       const to = e.relatedTarget;
       if (to && cell.contains(to)) return; // moved within the same cell
       if (cell === hovered) hovered = null;
-      const field = fieldFor(cell);
-      if (field) field.disappear();
+      refresh(cell);
+    });
+    document.addEventListener("click", (e) => {
+      if (e.target.closest && e.target.closest(".partner-close")) {
+        openCells().forEach((c) => { const p = panel(); if (p) p.classList.remove("open"); closeCell(c); });
+        return;
+      }
+      const cell = e.target.closest && e.target.closest(CELL);
+      if (cell) toggle(cell);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      const cell = e.target.closest && e.target.closest(CELL);
+      if (!cell) return;
+      e.preventDefault();
+      toggle(cell);
     });
   }
 
