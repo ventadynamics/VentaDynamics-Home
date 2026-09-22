@@ -4,20 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Venta Dynamics — Where Creativity Meets Code</title>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&display=swap" as="style">
-<meta name="description" content="Venta Dynamics — независимый проект дизайна и разработки. Дизайн и разработка в одних руках. Работаем на результат, а не на тренды.">
+<link rel="preload" href="./assets/fonts/MTSWide-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="./assets/fonts/MTSWide-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<meta name="description" content="Venta Dynamics — дизайн и разработка сайтов и мобильных приложений для бизнеса. Небольшой сайт запускаем за несколько дней, крупные продукты ведём недельными спринтами.">
 <link rel="canonical" href="https://ventadynamics.dev/">
 <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Venta Dynamics">
 <meta property="og:title" content="Venta Dynamics — дизайн и разработка цифровых продуктов">
-<meta property="og:description" content="Дизайн и разработка в одних руках. Работаем на результат, а не на тренды.">
+<meta property="og:description" content="Дизайн и разработка сайтов и мобильных приложений для бизнеса. Под задачу, без лишнего.">
 <meta property="og:url" content="https://ventadynamics.dev/">
 <meta property="og:image" content="https://ventadynamics.dev/assets/og-image.png">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Venta Dynamics — дизайн и разработка цифровых продуктов">
-<meta name="twitter:description" content="Дизайн и разработка в одних руках. Работаем на результат, а не на тренды.">
+<meta name="twitter:description" content="Дизайн и разработка сайтов и мобильных приложений для бизнеса. Под задачу, без лишнего.">
 <meta name="twitter:image" content="https://ventadynamics.dev/assets/og-image.png">
 <script type="application/ld+json">
 {
@@ -60,9 +61,6 @@
   a:hover { color: #0a0a0a; }
   html { -webkit-text-size-adjust: 100%; }
   h2 { text-wrap: balance; }
-  @media (max-width: 640px) {
-    #about-photo-box { width: 100% !important; max-width: 200px; height: auto !important; }
-  }
   @media (max-width: 700px) {
     :root { --nav-h: 110px; }
     /* ---- Nav: logo + CTA on the first row, section links on the second. ---- */
@@ -80,10 +78,11 @@
     #contact > div { padding: 64px 20px !important; }
     #about h2, #services h2, #work h2, #process h2 { margin-bottom: 32px !important; font-size: clamp(28px, 8vw, 34px) !important; }
     #contact h2 { margin-bottom: 36px !important; font-size: clamp(30px, 8.6vw, 38px) !important; }
-    /* Card cells inside the grids. */
-    #about > div > div[style*="padding:32px"],
-    #services > div > div[style*="padding:32px"],
-    #process > div > div[style*="padding:32px"] { padding: 24px 20px !important; }
+    /* Card cells inside the grids: strip the desktop side padding so each
+       card's number and text line up with the section header's left edge
+       (the old [style*="padding:32px"] selector never matched the real
+       "padding:36px 32px" value, so this stayed broken). */
+    .card-grid > div { padding: 26px 0 !important; }
     #about h3, #services h3, #process h3 { font-size: 17px !important; }
 
     /* ---- Hero ---- */
@@ -95,23 +94,8 @@
     #hero-inner a[href="#contact"] { display: block !important; width: 100%; text-align: center; padding: 15px 20px !important; }
     #hero-inner p { font-size: 15px !important; }
 
-    /* ---- About ---- */
-    .about-profile { gap: 24px !important; margin-bottom: 24px !important; }
-    #about-text-col p { font-size: 16px !important; }
-
-    /* ---- Work carousel ---- */
-    #work-track { gap: 16px !important; padding-top: 12px !important; padding-bottom: 12px !important;
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important;
-      mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important; }
-    .work-card { width: 82vw !important; padding: 16px !important; }
-    /* On a phone-width card the arrows land almost on top of the
-       screenshot itself (the wrapper they're positioned against is no
-       wider than the card) — swipe already works via native touch
-       scrolling, so just hide them instead of overlapping the image. */
-    #work-prev, #work-next { display: none !important; }
-
     /* ---- Contact ---- */
-    #contact h2 + div { gap: 24px !important; }
+    #contact p + div { gap: 24px !important; }
     #copy-email-text, #contact a[href^="https://t.me/"] { font-size: 17px !important; }
 
     /* ---- Footer & misc ---- */
@@ -123,13 +107,10 @@
   @media (max-width: 345px) {
     #nav-about { font-size: 13px !important; }
   }
-  /* Tablet: the single-row nav only just overflows here, so tighten its
-     gaps; the carousel arrows would sit on top of the card edge, so hide
-     them (drag/swipe still works). */
+  /* Tablet: the single-row nav only just overflows here, so tighten its gaps. */
   @media (min-width: 701px) and (max-width: 900px) {
     .nav-bar { gap: 24px !important; }
     .nav-links { gap: 24px !important; }
-    #work-prev, #work-next { display: none !important; }
   }
   /* Small-viewport units keep the hero inside the visible area on phones
      whose browser chrome collapses on scroll (100vh alone overshoots). */
@@ -137,6 +118,19 @@
     @media (max-width: 700px) {
       #hero { min-height: calc(100svh - var(--nav-h)) !important; }
     }
+  }
+  /* ---- Logo cloud ---- */
+  .logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
+  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 16px; min-height: 128px; }
+  .logo-cell.alt { background: #f7f7f9; }
+  .logo-cell img { height: 24px; width: auto; max-width: 80%; opacity: 0.88; transition: opacity .25s ease, transform .25s ease; }
+  .logo-cell:hover img { opacity: 1; transform: translateY(-3px); }
+  .logo-plus { position: absolute; top: 50%; transform: translate(-50%, -50%); color: rgba(10,10,10,0.28); font-size: 22px; font-weight: 400; line-height: 1; pointer-events: none; z-index: 3; }
+  @media (max-width: 700px) {
+    .logo-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .logo-cell { padding: 30px 12px !important; min-height: 100px !important; }
+    .logo-cell img { height: 19px !important; max-width: 78% !important; }
+    .logo-plus { display: none !important; }
   }
 </style>
 <!-- Yandex.Metrika counter -->
@@ -157,10 +151,23 @@
 <noscript><div><img src="https://mc.yandex.ru/watch/110916071" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  @font-face {
+    font-family: 'MTS Wide';
+    src: url('./assets/fonts/MTSWide-Medium.woff2') format('woff2'),
+         url('./assets/fonts/MTSWide-Medium.ttf') format('truetype');
+    font-weight: 100 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'MTS Wide';
+    src: url('./assets/fonts/MTSWide-Bold.woff2') format('woff2'),
+         url('./assets/fonts/MTSWide-Bold.ttf') format('truetype');
+    font-weight: 501 900;
+    font-style: normal;
+    font-display: swap;
+  }
   html { scrollbar-color: #1b17ff #f2f2f5; scrollbar-width: thin; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: #f2f2f5; }
@@ -169,15 +176,12 @@
   @media (prefers-reduced-motion: reduce) {
     #hero-gradient-canvas { display: none; }
   }
-  .work-track { scrollbar-width: none; }
-  .work-track::-webkit-scrollbar { display: none; }
-  .work-card { transform-origin: center center; will-change: transform, opacity; }
   #nav-services, #nav-work, #nav-process, #nav-contact-link, #nav-about { transition: color .25s ease, transform .25s ease; }
   #back-to-top { transition: opacity .25s ease, transform .25s ease, background .2s ease, color .2s ease; }
 </style>
 </helmet>
 <div id="scroll-progress" style="position:fixed;top:0;left:0;height:3px;width:0%;background:#1b17ff;z-index:70;"></div>
-<div style="background:#ffffff;color:#0a0a0a;font-family:'Unbounded',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;min-height:100vh;">
+<div style="background:#ffffff;color:#0a0a0a;font-family:'MTS Wide',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;min-height:100vh;">
 
   <nav style="position:sticky;top:0;z-index:50;background:#ffffff;border-bottom:1px solid rgba(10,10,10,0.12);">
     <div class="nav-bar" style="max-width:1400px;margin:0 auto;padding:14px clamp(24px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:36px;">
@@ -187,7 +191,7 @@
       </div>
       <div class="nav-links" style="display:flex;align-items:center;gap:36px;flex-wrap:wrap;margin-left:auto;">
         <a id="nav-services" href="#services" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Услуги</a>
-        <a id="nav-work" href="#work" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Работы</a>
+        <a id="nav-work" href="#work" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Стек</a>
         <a id="nav-process" href="#process" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Процесс</a>
       </div>
       <a id="nav-contact-link" class="nav-cta" href="#contact" style="font-size:14px;font-weight:600;color:#ffffff;background:#1b17ff;padding:10px 20px;border-radius:3px;display:inline-block;white-space:nowrap;transition:background .25s ease,transform .25s ease;" style-hover="background:#0a0a0a;transform:translateY(-2px);">Написать</a>
@@ -201,12 +205,12 @@
       <canvas id="hero-gradient-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;background:linear-gradient(135deg, #05061a 0%, #1b17ff 55%, #4b48ff 100%);--gradient-color-1:#1b17ff;--gradient-color-2:#4b48ff;--gradient-color-3:#7a5cff;--gradient-color-4:#05061a;"></canvas>
     </div>
     <div id="hero-inner" style="position:relative;z-index:1;display:flex;flex-direction:column;gap:40px;flex:1;justify-content:space-between;padding:calc(clamp(24px,5vw,64px) + 32px);">
-      <h1 id="hero-title" style="margin:0;font-size:clamp(36px,5.6vw,100px);font-weight:800;line-height:1.04;letter-spacing:-0.02em;text-transform:uppercase;color:#ffffff;max-width:920px;">Разработка, которой доверяют</h1>
+      <h1 id="hero-title" style="margin:0;font-size:clamp(36px,5.6vw,100px);font-weight:800;line-height:1.04;letter-spacing:-0.02em;text-transform:uppercase;color:#ffffff;max-width:920px;">Сайты и приложения под задачу. Без лишнего.</h1>
       <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-end;justify-content:space-between;">
-        <p style="{{ heroStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 200ms,transform .7s cubic-bezier(.16,1,.3,1) 200ms;margin:0;max-width:480px;font-size:clamp(16px,1.6vw,18px);line-height:1.6;color:rgba(255,255,255,0.75);">Venta Dynamics — независимый проект дизайна и разработки. Работаем на результат, а не на тренды.</p>
+        <p style="{{ heroStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 200ms,transform .7s cubic-bezier(.16,1,.3,1) 200ms;margin:0;max-width:480px;font-size:clamp(16px,1.6vw,18px);line-height:1.6;color:rgba(255,255,255,0.75);">Venta Dynamics: дизайн и разработка сайтов и мобильных приложений для бизнеса. Небольшой сайт запускаем за несколько дней, крупный продукт ведём недельными спринтами.</p>
           <div style="{{ heroStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 300ms,transform .7s cubic-bezier(.16,1,.3,1) 300ms;display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
-          <a href="#contact" style="font-size:16px;font-weight:600;color:#0a0a0a;background:#ffffff;padding:16px 28px;border-radius:3px;transition:background .25s ease,color .25s ease,transform .25s ease;display:inline-block;" style-hover="background:#0a0a0a;color:#ffffff;transform:translateY(-3px);">Обсудить проект</a>
-          <a href="#work" style="font-size:15px;font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:2px;transition:color .25s ease,border-color .25s ease,transform .25s ease;display:inline-block;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">Смотреть работы →</a>
+          <a href="#contact" style="font-size:16px;font-weight:600;color:#0a0a0a;background:#ffffff;padding:16px 28px;border-radius:3px;transition:background .25s ease,color .25s ease,transform .25s ease;display:inline-block;" style-hover="background:#0a0a0a;color:#ffffff;transform:translateY(-3px);">Обсудить задачу</a>
+          <a href="#work" style="font-size:15px;font-weight:600;color:#ffffff;border-bottom:1px solid transparent;padding-bottom:2px;transition:color .25s ease,border-color .25s ease,transform .25s ease;display:inline-block;" style-hover="color:#ffffff;border-color:#ffffff;transform:translateX(6px);">Смотреть стек →</a>
         </div>
       </div>
     </div>
@@ -215,139 +219,98 @@
   <section id="about" style="background-color:#ffffff;display:flex;flex-direction:column;max-width:1400px;margin:0 auto;padding:clamp(56px,6vw,88px) clamp(24px,5vw,64px);border-bottom:1px solid rgba(10,10,10,0.12);scroll-margin-top:var(--nav-h);">
     <div style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">01 — О проекте</div>
     <h2 style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 40px;max-width:900px;">Дизайн и разработка в одних руках.</h2>
-    <div class="about-profile" style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 120ms,transform .7s cubic-bezier(.16,1,.3,1) 120ms;display:flex;flex-wrap:wrap;align-items:flex-start;gap:48px;margin-bottom:32px;">
-      <div id="about-photo-box" style="width:200px;aspect-ratio:1/1;flex:none;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-        <img src="assets/daniil.jpg" alt="Даниил Янцевич" style="width:100%;height:100%;object-fit:cover;display:block;">
-      </div>
-      <div id="about-text-col" style="flex:1 1 320px;display:flex;flex-direction:column;justify-content:center;gap:12px;">
-        <div style="font-size:20px;font-weight:700;">Даниил Янцевич</div>
-        <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:rgba(10,10,10,0.45);">Дизайн и разработка</div>
-        <p style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);max-width:620px;margin:8px 0 0;font-size:clamp(17px,1.8vw,19px);color:rgba(10,10,10,0.65);line-height:1.55;">За Venta Dynamics стоит один специалист: дизайн, код и коммуникация — в одних руках, без агентства и лишних передач по цепочке.</p>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
+    <p style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 120ms,transform .7s cubic-bezier(.16,1,.3,1) 120ms;max-width:720px;margin:0 0 40px;font-size:clamp(17px,1.8vw,19px);color:rgba(10,10,10,0.65);line-height:1.55;">Venta Dynamics делает сайты, веб-сервисы и мобильные приложения. Дизайн, код и общение по проекту не расходятся по отделам: вы обсуждаете задачу с тем, кто её решает.</p>
+    <div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 180ms,transform .7s cubic-bezier(.16,1,.3,1) 180ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
         <h3 style="font-size:20px;font-weight:700;margin:0;">Прямая связь</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Все вопросы и правки — напрямую с исполнителем, без менеджеров и пересказа через третьих лиц.</p>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Вопросы и правки обсуждаются с исполнителем, без менеджеров и пересказов через третьих лиц.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 260ms,transform .7s cubic-bezier(.16,1,.3,1) 260ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
         <h3 style="font-size:20px;font-weight:700;margin:0;">Партнёрство</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Работаем не с клиентами, а с партнёрами — на равных и с общей ответственностью за результат.</p>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Работаем на равных и делим ответственность за результат. Решения обсуждаем, а не спускаем сверху.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 340ms,transform .7s cubic-bezier(.16,1,.3,1) 340ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Фокус на качестве</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Приоритет — глубина проработки, а не количество проектов.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Под задачу</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Сначала разбираемся, что нужно бизнесу, потом выбираем технологию. Если хватает сайта с формой заявки, не будем продавать вам приложение.</p>
         </div>
       </div>
-    </div>
-    <div style="{{ aboutStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 420ms,transform .7s cubic-bezier(.16,1,.3,1) 420ms;margin-top:28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-      <span style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:rgba(10,10,10,0.4);white-space:nowrap;">GitHub-активность</span>
-      <a href="https://github.com/ventadynamics" target="_blank" rel="noopener" style="display:block;flex:1 1 300px;max-width:900px;overflow-x:auto;-webkit-overflow-scrolling:touch;">
-        <img src="https://ghchart.rshah.org/1b17ff/ventadynamics" alt="GitHub-активность ventadynamics" style="display:block;width:100%;min-width:480px;height:auto;" loading="lazy">
-      </a>
     </div>
   </section>
 
   <section id="services" style="display:flex;flex-direction:column;max-width:1400px;margin:0 auto;padding:clamp(56px,6vw,88px) clamp(24px,5vw,64px);border-bottom:1px solid rgba(10,10,10,0.12);scroll-margin-top:var(--nav-h);">
     <div style="{{ servicesStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">02 — Услуги</div>
     <h2 style="{{ servicesStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">Направления</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
+    <div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ servicesStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Веб-приложения и сайты</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Фронтенд и бэкенд — от лендинга до сложного веб-продукта.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Сайты и веб-приложения</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Лендинги, сайты-визитки, витрины с меню, личные кабинеты и админки.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ servicesStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Мобильная разработка</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Нативные приложения под iOS и Android.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Мобильные приложения</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">iOS и Android, с публикацией в App Store и Google Play.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ servicesStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Unity-разработка</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Игры и интерактивные приложения на Unity.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Сложные продукты</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Бронирования, программы лояльности, интеграции с кассой. Объём и сроки обсуждаем на старте.</p>
         </div>
       </div>
     </div>
   </section>
 
   <section id="work" style="display:flex;flex-direction:column;max-width:1400px;margin:0 auto;padding:clamp(56px,6vw,88px) clamp(24px,5vw,64px);border-bottom:1px solid rgba(10,10,10,0.12);scroll-margin-top:var(--nav-h);">
-    <div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">03 — Работы</div>
-    <h2 style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">Избранные проекты</h2>
-    <div style="position:relative;overflow-x:hidden;">
-    <div id="work-track" class="work-track" style="display:flex;gap:32px;overflow-x:auto;scroll-snap-type:x mandatory;padding:24px 24px;-webkit-overflow-scrolling:touch;width:100vw;margin-left:calc(-50vw + 50%);cursor:grab;user-select:none;-webkit-mask-image:linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);mask-image:linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);">
-      <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:14px;">
-        <div class="work-card-media" style="width:100%;aspect-ratio:16/9;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-          <img src="assets/work-pavaga.jpg" alt="Play.pavaga.gg — киберспортивная платформа" draggable="false" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-        </div>
-        <div>
-          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
-          <h3 style="font-size:20px;font-weight:700;margin:4px 0 4px;">Play.pavaga.gg</h3>
-          <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Киберспортивная платформа: турниры, команды, рейтинги игроков.</p>
-        </div>
-        </div>
-      </div>
-      <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;display:flex;flex-direction:column;gap:14px;">
-        <div class="work-card-media" style="width:100%;aspect-ratio:16/9;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-          <img src="assets/work-letitbe.jpg" alt="Let it be — панель управления мобильным приложением кофейни" draggable="false" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-        </div>
-        <div>
-          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
-          <h3 style="font-size:20px;font-weight:700;margin:4px 0 4px;">Let it be</h3>
-          <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Панель управления кофейней: меню, акции и лояльность.</p>
-        </div>
-        </div>
-      </div>
-      <div class="work-card" style="flex:0 0 auto;width:min(720px,84vw);scroll-snap-align:center;background:#ffffff;padding:32px;overflow:hidden;"><div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;display:flex;flex-direction:column;gap:14px;">
-        <div class="work-card-media" style="width:100%;aspect-ratio:16/9;background:#f2f2f5;border:1px solid rgba(10,10,10,0.15);overflow:hidden;">
-          <img src="assets/work-threshold.jpg" alt="Threshold — левел-арт для инди-игры" draggable="false" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
-        </div>
-        <div>
-          <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
-          <h3 style="font-size:20px;font-weight:700;margin:4px 0 4px;">Threshold</h3>
-          <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Левел-арт и геймдизайн для инди-игры в ретро-стиле.</p>
-        </div>
-        </div>
-      </div>
-    </div>
-    <a href="javascript:void(0)" id="work-prev" aria-label="Предыдущий проект" style="position:absolute;top:50%;left:max(24px, calc(50% - 428px));transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid rgba(10,10,10,0.1);background:#ffffff;box-shadow:0 8px 24px rgba(10,10,10,0.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0a0a0a;transition:background .2s ease,color .2s ease,box-shadow .2s ease;z-index:2;" style-hover="background:#0a0a0a;color:#ffffff;box-shadow:0 8px 24px rgba(10,10,10,0.3);">←</a>
-    <a href="javascript:void(0)" id="work-next" aria-label="Следующий проект" style="position:absolute;top:50%;right:max(24px, calc(50% - 428px));transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid rgba(10,10,10,0.1);background:#ffffff;box-shadow:0 8px 24px rgba(10,10,10,0.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0a0a0a;transition:background .2s ease,color .2s ease,box-shadow .2s ease;z-index:2;" style-hover="background:#0a0a0a;color:#ffffff;box-shadow:0 8px 24px rgba(10,10,10,0.3);">→</a>
+    <div style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">03 — Технологии</div>
+    <h2 style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">С чем мы работаем</h2>
+    <div class="logo-grid" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 120ms,transform .7s cubic-bezier(.16,1,.3,1) 120ms;position:relative;">
+      <div class="logo-cell alt"><img src="./assets/logos/nvidia.svg" alt="NVIDIA" loading="lazy"></div>
+      <div class="logo-cell"><img src="./assets/logos/supabase.svg" alt="Supabase" loading="lazy"></div>
+      <div class="logo-cell alt"><img src="./assets/logos/github.svg" alt="GitHub" loading="lazy"></div>
+      <div class="logo-cell"><img src="./assets/logos/openai.svg" alt="OpenAI" loading="lazy"></div>
+      <div class="logo-cell"><img src="./assets/logos/turso.svg" alt="Turso" loading="lazy"></div>
+      <div class="logo-cell alt"><img src="./assets/logos/clerk.svg" alt="Clerk" loading="lazy"></div>
+      <div class="logo-cell"><img src="./assets/logos/claude.svg" alt="Claude" loading="lazy"></div>
+      <div class="logo-cell alt"><img src="./assets/logos/vercel.svg" alt="Vercel" loading="lazy"></div>
+      <span class="logo-plus" style="left:25%;">+</span>
+      <span class="logo-plus" style="left:50%;">+</span>
+      <span class="logo-plus" style="left:75%;">+</span>
     </div>
   </section>
 
   <section id="process" style="display:flex;flex-direction:column;max-width:1400px;margin:0 auto;padding:clamp(56px,6vw,88px) clamp(24px,5vw,64px);scroll-margin-top:var(--nav-h);">
     <div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,10,0.55);margin-bottom:16px;">04 — Как работаем</div>
     <h2 style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.01em;margin:0 0 56px;">Процесс</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
+    <div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(10,10,10,0.12);">
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">01</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Планирование</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Обсуждаем идею, формируем и согласовываем план разработки.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Разбор задачи</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Обсуждаем, что болит и что должно получиться на выходе. Иногда честный ответ: вам хватит решения попроще.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 80ms,transform .7s cubic-bezier(.16,1,.3,1) 80ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">02</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Спринты</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Работаем неделями: каждую неделю показываем прогресс и обсуждаем следующие шаги.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Быстрый запуск</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Небольшой сайт или витрину собираем за несколько дней после предоплаты и получения материалов.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 160ms,transform .7s cubic-bezier(.16,1,.3,1) 160ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">03</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Тестирование и запуск</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Проверяем на багах и кейсах, затем выпускаем продукт в работу.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Спринты</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Крупные продукты ведём недельными спринтами: раз в неделю созвон, показываем прогресс и вместе решаем, что дальше.</p>
         </div>
       </div>
       <div style="background:#ffffff;padding:36px 32px;overflow:hidden;"><div style="{{ processStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 240ms,transform .7s cubic-bezier(.16,1,.3,1) 240ms;display:flex;flex-direction:column;gap:14px;">
         <span style="font-size:14px;font-weight:700;color:rgba(10,10,10,0.4);">04</span>
-        <h3 style="font-size:20px;font-weight:700;margin:0;">Обучение</h3>
-        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">При необходимости обучаем команду партнёра работе с продуктом.</p>
+        <h3 style="font-size:20px;font-weight:700;margin:0;">Запуск и поддержка</h3>
+        <p style="font-size:15px;line-height:1.6;color:rgba(10,10,10,0.6);margin:0;">Тестируем, выпускаем, остаёмся на связи. Правки, обновления и развитие продукта после запуска.</p>
         </div>
       </div>
     </div>
@@ -357,7 +320,8 @@
     <canvas id="contact-gradient-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;background:linear-gradient(135deg, #05061a 0%, #1b17ff 55%, #4b48ff 100%);--gradient-color-1:#1b17ff;--gradient-color-2:#4b48ff;--gradient-color-3:#7a5cff;--gradient-color-4:#05061a;"></canvas>
     <div style="position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:clamp(56px,6vw,88px) clamp(24px,5vw,64px);width:100%;">
       <div style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:24px;">05 — Контакты</div>
-      <h2 style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:clamp(36px,6vw,80px);font-weight:800;letter-spacing:-0.01em;line-height:1.02;max-width:1200px;margin:0 0 56px;text-transform:uppercase;">Готовы обсудить проект?</h2>
+      <h2 style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);font-size:clamp(36px,6vw,80px);font-weight:800;letter-spacing:-0.01em;line-height:1.02;max-width:1200px;margin:0 0 24px;text-transform:uppercase;">Есть задача?</h2>
+      <p style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 60ms,transform .7s cubic-bezier(.16,1,.3,1) 60ms;font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.7);line-height:1.5;max-width:560px;margin:0 0 48px;">Расскажите о ней в двух словах, предложим решение.</p>
       <div style="{{ contactStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 100ms,transform .7s cubic-bezier(.16,1,.3,1) 100ms;display:flex;flex-wrap:wrap;gap:48px;align-items:center;">
         <div style="display:flex;align-items:center;gap:16px;">
           <a href="javascript:void(0)" id="copy-email-badge" aria-label="Скопировать email" style="position:relative;flex-shrink:0;width:36px;height:36px;border-radius:3px;border:1.5px solid #ffffff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#ffffff;cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#ffffff;color:#0a0a0a;">@<span id="copy-email-tooltip" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:#ffffff;color:#0a0a0a;font-size:12px;font-weight:600;padding:6px 10px;border-radius:3px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;">Скопировано</span></a>
@@ -376,7 +340,7 @@
       <span style="font-size:14px;color:rgba(10,10,10,0.55);">© 2026 Venta Dynamics — Where Creativity Meets Code</span>
       <div style="display:flex;gap:28px;flex-wrap:wrap;">
         <a href="#services" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Услуги</a>
-        <a href="#work" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Работы</a>
+        <a href="#work" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Стек</a>
         <a href="#process" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Процесс</a>
         <a href="mailto:d.yantsevich@ventadynamics.dev" style="font-size:14px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">d.yantsevich@ventadynamics.dev</a>
       </div>
@@ -549,24 +513,6 @@ class Component extends DCLogic {
       if (canvasIdentityChecks >= 30) clearInterval(canvasIdentityTimer);
     }, 300);
   }
-  function syncAboutPhotoSize() {
-    const photoBox = document.querySelector("#about-photo-box");
-    const textCol = document.querySelector("#about-text-col");
-    if (!photoBox || !textCol) return;
-    const sync = () => {
-      if (window.innerWidth <= 640) return; // CSS media query takes over below this width
-      const size = textCol.offsetHeight + "px";
-      photoBox.style.width = size;
-      photoBox.style.height = size;
-    };
-    sync();
-    if ("ResizeObserver" in window) {
-      new ResizeObserver(sync).observe(textCol);
-    } else {
-      window.addEventListener("resize", sync);
-    }
-  }
-
   function initNavHeightVar() {
     // Every section's min-height and scroll-margin-top read --nav-h to stay
     // in sync with the sticky nav. On mobile the nav wraps to two rows and
@@ -773,223 +719,14 @@ class Component extends DCLogic {
     });
   }
 
-  const WORK_DEBUG = true;
+  // Lightweight boot-path logger, silent in production (flip WORK_DEBUG to
+  // true to trace the framework mount/boot sequence in the console).
+  const WORK_DEBUG = false;
   const wlog = (...args) => {
     if (!WORK_DEBUG) return;
-    // Plain-text stringify (not raw objects) so the log stays readable
-    // when copy-pasted out of devtools instead of collapsing to "Object".
     const parts = args.map((a) => (typeof a === "object" && a !== null ? JSON.stringify(a) : String(a)));
-    console.log(`[work ${performance.now().toFixed(0)}ms]`, parts.join(" "));
+    console.log(`[boot ${performance.now().toFixed(0)}ms]`, parts.join(" "));
   };
-
-  function initWorkCarousel() {
-    const track = document.querySelector("#work-track");
-    wlog("init", { trackFound: !!track });
-    if (!track) return;
-    const cards = Array.from(track.querySelectorAll(".work-card"));
-    wlog("cards found", cards.length);
-    if (!cards.length) return;
-    let raf = null;
-    const wrapper = track.parentElement;
-    const prevBtn = document.querySelector("#work-prev");
-    const nextBtn = document.querySelector("#work-next");
-
-    const layout = (why) => {
-      // Center padding computed in JS (robust vs. nested calc()/vw quirks):
-      // enough space on each side that the first/last card can reach the
-      // track's visual center when scrolled all the way to that edge.
-      const cardWidth = cards[0].getBoundingClientRect().width;
-      const sidePad = Math.max(24, (track.clientWidth - cardWidth) / 2);
-      track.style.paddingLeft = sidePad + "px";
-      track.style.paddingRight = sidePad + "px";
-      // Center the arrows on the screenshot itself, not on the whole card
-      // (image + caption text) — otherwise the caption's height pulls the
-      // 50%-of-card midpoint down below the actual image.
-      const media = cards[0].querySelector(".work-card-media");
-      if (media && wrapper) {
-        const mediaRect = media.getBoundingClientRect();
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const centerY = mediaRect.top + mediaRect.height / 2 - wrapperRect.top;
-        if (prevBtn) prevBtn.style.top = centerY + "px";
-        if (nextBtn) nextBtn.style.top = centerY + "px";
-      }
-      wlog("layout()", { why, cardWidth, trackClientWidth: track.clientWidth, sidePad });
-    };
-
-    const update = (why) => {
-      const trackRect = track.getBoundingClientRect();
-      const centerX = trackRect.left + trackRect.width / 2;
-      const scales = [];
-      cards.forEach((card, i) => {
-        const r = card.getBoundingClientRect();
-        const cardCenter = r.left + r.width / 2;
-        const dist = Math.abs(cardCenter - centerX);
-        const norm = Math.min(dist / (trackRect.width / 2), 1);
-        const scale = 1 - norm * 0.22;
-        card.style.transform = `scale(${scale})`;
-        card.style.opacity = String(1 - norm * 0.4);
-        scales.push({ i, cardCenter: Math.round(cardCenter), dist: Math.round(dist), scale: scale.toFixed(3) });
-      });
-      wlog("update()", { why, trackWidth: Math.round(trackRect.width), centerX: Math.round(centerX), scrollLeft: track.scrollLeft, scales });
-      raf = null;
-    };
-
-    track.addEventListener(
-      "scroll",
-      () => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => update("scroll"));
-      },
-      { passive: true }
-    );
-    window.addEventListener("resize", () => {
-      layout("window-resize");
-      update("window-resize");
-    });
-
-    layout("initial-sync");
-    track.scrollLeft = 0; // with symmetric padding in place, this centers the first card
-    wlog("after initial layout+scrollLeft=0", { scrollLeft: track.scrollLeft, paddingLeft: track.style.paddingLeft });
-    // Wait two frames before the first scale pass: on initial load the
-    // browser hasn't necessarily settled the padding/scroll-position
-    // change yet, so measuring immediately under-scales the first card.
-    requestAnimationFrame(() => requestAnimationFrame(() => update("initial-raf-x2")));
-
-    // Re-measure once web fonts swap in: the custom font can change card
-    // width/height after our initial layout pass, which throws off the
-    // centering padding and leaves the first card looking unscaled.
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        wlog("document.fonts.ready resolved");
-        layout("fonts-ready");
-        track.scrollLeft = 0;
-        requestAnimationFrame(() => requestAnimationFrame(() => update("fonts-ready-raf-x2")));
-      });
-    }
-    // On a cold cache (first visit), everything below the fold (images,
-    // canvases, custom elements) settles at different times than on a
-    // cached reload, which shifts the page's scrollbar/viewport width and
-    // throws off the 100vw-based track sizing after our initial pass. Keep
-    // correcting for as long as the track's own size keeps changing
-    // (instead of only checking once), and do a final pass on window
-    // "load" (all subresources fully loaded) too. Stop forcing the scroll
-    // position back to the first card the moment a visitor actually
-    // touches the carousel, so a later resize/rotation never yanks them
-    // away from where they scrolled to.
-    let settled = false;
-    const markSettled = (reason) => {
-      wlog("markSettled", reason);
-      settled = true;
-    };
-    track.addEventListener("pointerdown", () => markSettled("pointerdown"), { capture: true, once: true });
-    track.addEventListener("wheel", () => markSettled("wheel"), { passive: true, once: true });
-    setTimeout(() => markSettled("timeout-6000"), 6000);
-    const resettle = (why) => {
-      wlog("resettle triggered", { why, settled, trackClientWidth: track.clientWidth });
-      layout(`resettle:${why}`);
-      if (settled) {
-        update(`resettle:${why}`);
-        return;
-      }
-      track.scrollLeft = 0;
-      requestAnimationFrame(() => requestAnimationFrame(() => update(`resettle:${why}-raf-x2`)));
-    };
-    if ("ResizeObserver" in window) {
-      const ro = new ResizeObserver(() => resettle("resize-observer"));
-      ro.observe(track);
-    }
-    window.addEventListener("load", () => resettle("window-load"));
-
-    // Confirmed via logging: the component framework can silently replace
-    // #work-track with a fresh node some time after our listeners were
-    // bound to the old one (it happened before hero-dom-ready ever fires,
-    // so waiting for that signal alone isn't enough). When that happens
-    // every measurement here reads 0 forever, since the old node is
-    // detached. Self-heal: if the live node stops matching the one we
-    // bound to, tear down this instance's watcher and re-run the whole
-    // init against the current node.
-    let identityChecks = 0;
-    const identityTimer = setInterval(() => {
-      identityChecks += 1;
-      const current = document.querySelector("#work-track");
-      const stale = !track.isConnected || current !== track;
-      wlog("identity check", {
-        n: identityChecks,
-        sameNode: current === track,
-        stillConnected: track.isConnected,
-      });
-      if (stale && current) {
-        wlog("work-track was replaced — re-binding carousel to the fresh node");
-        clearInterval(identityTimer);
-        initWorkCarousel();
-        return;
-      }
-      if (identityChecks >= 30) clearInterval(identityTimer);
-    }, 300);
-
-    // Click-and-drag scrolling (mouse only; touch already scrolls natively).
-    let isDown = false;
-    let dragStartX = 0;
-    let dragStartScroll = 0;
-    let moved = false;
-    track.addEventListener(
-      "pointerdown",
-      (event) => {
-        if (event.pointerType !== "mouse") return;
-        isDown = true;
-        moved = false;
-        dragStartX = event.clientX;
-        dragStartScroll = track.scrollLeft;
-        track.style.cursor = "grabbing";
-        track.style.scrollSnapType = "none";
-      },
-      { capture: true }
-    );
-    window.addEventListener(
-      "pointermove",
-      (event) => {
-        if (!isDown) return;
-        const dx = event.clientX - dragStartX;
-        if (Math.abs(dx) > 4) moved = true;
-        track.scrollLeft = dragStartScroll - dx;
-      },
-      { capture: true }
-    );
-    const endDrag = () => {
-      if (!isDown) return;
-      isDown = false;
-      track.style.cursor = "grab";
-      // Let the browser's own scroll-snap decide (and animate to) the
-      // nearest card — just make sure that correction is smooth instead
-      // of an instant jump. scroll-behavior has to stay "auto" during the
-      // drag itself (smooth would lag behind the pointer), so it's only
-      // switched on right here, then back off once the snap settles.
-      track.style.scrollBehavior = "smooth";
-      track.style.scrollSnapType = "x mandatory";
-      const resetBehavior = () => { track.style.scrollBehavior = "auto"; };
-      if ("onscrollend" in window) {
-        track.addEventListener("scrollend", resetBehavior, { once: true });
-      } else {
-        setTimeout(resetBehavior, 500);
-      }
-    };
-    window.addEventListener("pointerup", endDrag);
-    window.addEventListener("pointercancel", endDrag);
-    // Prevent the trailing click (from a drag release) from activating
-    // whatever the pointer happens to land on.
-    track.addEventListener(
-      "click",
-      (event) => {
-        if (moved) event.preventDefault();
-      },
-      true
-    );
-
-    // Prev/next arrow buttons.
-    const step = () => cards[0].getBoundingClientRect().width + 32;
-    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: -step(), behavior: "smooth" }); });
-    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.preventDefault(); track.scrollBy({ left: step(), behavior: "smooth" }); });
-  }
 
   const booted = new Set();
   function boot() {
@@ -1003,17 +740,9 @@ class Component extends DCLogic {
       glog(canvasId, "boot() starting gradient");
       startGradientCanvas(canvasId, palettes);
     });
-    if (!booted.has("about-photo-sync")) {
-      booted.add("about-photo-sync");
-      syncAboutPhotoSize();
-    }
     if (!booted.has("nav-height-var")) {
       booted.add("nav-height-var");
       initNavHeightVar();
-    }
-    if (!booted.has("work-carousel")) {
-      booted.add("work-carousel");
-      initWorkCarousel();
     }
     if (!booted.has("scroll-progress")) {
       booted.add("scroll-progress");

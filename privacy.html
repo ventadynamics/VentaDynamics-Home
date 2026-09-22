@@ -12,13 +12,19 @@
 <meta property="og:title" content="Политика конфиденциальности — Venta Dynamics">
 <meta property="og:url" content="https://ventadynamics.dev/privacy">
 <meta property="og:image" content="https://ventadynamics.dev/assets/og-image.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="./assets/fonts/MTSWide-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 <style>
+  @font-face {
+    font-family: 'MTS Wide';
+    src: url('./assets/fonts/MTSWide-Bold.woff2') format('woff2'),
+         url('./assets/fonts/MTSWide-Bold.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
   * { box-sizing: border-box; }
   html { scrollbar-color: #1b17ff #f2f2f5; scrollbar-width: thin; }
-  body { margin: 0; background: #ffffff; color: #0a0a0a; font-family: 'Unbounded', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; }
+  body { margin: 0; background: #ffffff; color: #0a0a0a; font-family: 'MTS Wide', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; }
   a { color: #1b17ff; text-decoration: none; }
   a:hover { color: #0a0a0a; }
   nav { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid rgba(10,10,10,0.12); }
