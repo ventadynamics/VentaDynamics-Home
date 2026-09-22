@@ -121,22 +121,24 @@
   }
   /* ---- Logo cloud / partners grid ---- */
   .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
-  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 16px; min-height: 128px; position: relative; overflow: hidden; isolation: isolate; }
+  .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 24px; min-height: 220px; position: relative; overflow: hidden; isolation: isolate; }
   .logo-cell.alt { background: #f7f7f9; }
   /* Partner logos: monochrome + faded at rest, full color + slightly scaled
-     on hover (paired with the brand-colored pixel ripple behind them). */
-  .logo-cell img { position: relative; z-index: 1; height: 28px; width: auto; max-width: 78%; filter: grayscale(1); opacity: 0.5; transition: filter .3s ease, opacity .3s ease, transform .3s ease; }
+     on hover (paired with the brand-colored pixel ripple behind them).
+     Each cell sets its own --logo-h so wordmarks and square emblems are
+     optically balanced against each other rather than a single fixed height. */
+  .logo-cell img { position: relative; z-index: 1; height: var(--logo-h, 96px); width: auto; max-width: 84%; max-height: 62%; filter: grayscale(1); opacity: 0.5; transition: filter .3s ease, opacity .3s ease, transform .3s ease; }
   .logo-cell:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.06); }
   /* Pixel-shimmer canvas: fills the cell behind the logo/placeholder and
      ripples in the client's brand color on hover (driven by initPixelGrids). */
   .pixel-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
   /* Placeholder shown until a real partner logo is added. */
-  .logo-skeleton { position: relative; z-index: 1; width: min(60%, 120px); height: 30px; border-radius: 6px; background: rgba(10,10,10,0.08); }
+  .logo-skeleton { position: relative; z-index: 1; width: min(55%, 160px); height: 48px; border-radius: 8px; background: rgba(10,10,10,0.08); }
   .logo-plus { position: absolute; top: 50%; transform: translate(-50%, -50%); color: rgba(10,10,10,0.28); font-size: 22px; font-weight: 400; line-height: 1; pointer-events: none; z-index: 3; }
   @media (max-width: 700px) {
     .logo-grid { grid-template-columns: repeat(1, 1fr) !important; }
-    .logo-cell { padding: 30px 12px !important; min-height: 100px !important; }
-    .logo-cell img { height: 19px !important; max-width: 78% !important; }
+    .logo-cell { padding: 40px 16px !important; min-height: 180px !important; }
+    .logo-cell img { height: calc(var(--logo-h, 96px) * 0.9) !important; max-width: 72% !important; }
     .logo-plus { display: none !important; }
   }
 </style>
@@ -258,10 +260,10 @@
          is added, e.g. data-colors="#e2001a,#ff5a5f". -->
     <div class="logo-grid" style="{{ workStyle }};transition:opacity .7s cubic-bezier(.16,1,.3,1) 180ms,transform .7s cubic-bezier(.16,1,.3,1) 180ms;position:relative;">
       <!-- Slot 1: PAVAGA — red brand ripple -->
-      <div class="logo-cell alt" data-colors="#c20f1b,#e63946,#8a0a12"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/pavaga.png" alt="PAVAGA" loading="lazy"></div>
-      <div class="logo-cell" data-colors="#004d1e,#0a7a37,#2f9c57"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/letitbe.png" alt="Let it be" loading="lazy"></div>
+      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#c20f1b,#e63946,#8a0a12"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/pavaga.png" alt="PAVAGA" loading="lazy"></div>
+      <div class="logo-cell" style="--logo-h:88px" data-colors="#004d1e,#0a7a37,#2f9c57"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/letitbe.png" alt="Let it be" loading="lazy"></div>
       <!-- Slot 3: БДМУ (awaiting logo file) — blue brand ripple ready -->
-      <div class="logo-cell alt" data-colors="#3d4b9e,#5866c2,#e2231a"><canvas class="pixel-canvas"></canvas><div class="logo-skeleton"></div></div>
+      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#3d4b9e,#5866c2,#e2231a"><canvas class="pixel-canvas"></canvas><div class="logo-skeleton"></div></div>
       <span class="logo-plus" style="left:33.333%;">+</span>
       <span class="logo-plus" style="left:66.666%;">+</span>
     </div>
