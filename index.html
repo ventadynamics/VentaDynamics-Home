@@ -8,7 +8,8 @@
 <link rel="preload" href="./assets/fonts/MTSWide-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 <meta name="description" content="Venta Dynamics — дизайн и разработка сайтов и мобильных приложений для бизнеса. Небольшой сайт запускаем за несколько дней, крупные продукты ведём недельными спринтами.">
 <link rel="canonical" href="https://ventadynamics.dev/">
-<link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+<link rel="icon" type="image/png" href="./assets/favicon.png">
+<link rel="apple-touch-icon" href="./assets/favicon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Venta Dynamics">
 <meta property="og:title" content="Venta Dynamics — дизайн и разработка цифровых продуктов">
@@ -68,6 +69,7 @@
     .nav-logo { align-items: flex-start !important; order: 0; flex: 1 1 0; min-width: 0; }
     #nav-about { font-size: 15px !important; white-space: nowrap; }
     .nav-logo span { font-size: 9.5px !important; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .nav-logo-mark { height: 28px !important; }
     .nav-cta { order: 1; flex: none; font-size: 12px !important; padding: 8px 12px !important; }
     .nav-links { order: 2; width: 100%; justify-content: flex-start; gap: 22px !important; margin-left: 0 !important; }
     .nav-links a { font-size: 14px !important; }
@@ -194,9 +196,12 @@
 
   <nav style="position:sticky;top:0;z-index:50;background:#ffffff;border-bottom:1px solid rgba(10,10,10,0.12);">
     <div class="nav-bar" style="max-width:1400px;margin:0 auto;padding:14px clamp(24px,5vw,64px);display:flex;align-items:center;justify-content:space-between;gap:36px;">
-      <div class="nav-logo" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
-        <a id="nav-about" href="#about" style="font-weight:800;font-size:17px;letter-spacing:0.02em;text-transform:uppercase;color:#1b17ff;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#0a0a0a;transform:translateY(-2px);">Venta Dynamics</a>
-        <span style="font-size:11px;font-weight:500;letter-spacing:0.01em;color:rgba(10,10,10,0.4);white-space:nowrap;">Build What Matters.</span>
+      <div class="nav-logo" style="display:flex;align-items:center;gap:12px;">
+        <a href="#about" aria-label="Venta Dynamics" style="display:flex;align-items:center;flex-shrink:0;"><img class="nav-logo-mark" src="./assets/logo-mark.png" alt="Venta Dynamics" style="height:34px;width:auto;display:block;"></a>
+        <div class="nav-logo-text" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+          <a id="nav-about" href="#about" style="font-weight:800;font-size:17px;letter-spacing:0.02em;text-transform:uppercase;color:#1b17ff;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#0a0a0a;transform:translateY(-2px);">Venta Dynamics</a>
+          <span style="font-size:11px;font-weight:500;letter-spacing:0.01em;color:rgba(10,10,10,0.4);white-space:nowrap;">Build What Matters.</span>
+        </div>
       </div>
       <div class="nav-links" style="display:flex;align-items:center;gap:36px;flex-wrap:wrap;margin-left:auto;">
         <a id="nav-work" href="#work" style="font-size:15px;font-weight:500;color:#0a0a0a;display:inline-block;transition:color .25s ease,transform .25s ease;" style-hover="color:#1b17ff;transform:translateY(-2px);">Партнёры</a>
