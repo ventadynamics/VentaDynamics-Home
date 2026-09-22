@@ -127,7 +127,7 @@
      on hover (paired with the brand-colored pixel ripple behind them).
      Each cell sets its own --logo-h so wordmarks and square emblems are
      optically balanced against each other rather than a single fixed height. */
-  .logo-cell img { position: relative; z-index: 1; height: var(--logo-h, 96px); width: auto; max-width: 84%; max-height: 62%; filter: grayscale(1); opacity: 0.5; transition: filter .3s ease, opacity .3s ease, transform .3s ease; }
+  .logo-cell img { position: relative; z-index: 1; height: var(--logo-h, 96px); width: auto; max-width: 84%; filter: grayscale(1); opacity: 0.5; transition: filter .3s ease, opacity .3s ease, transform .3s ease; }
   .logo-cell:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.06); }
   /* Pixel-shimmer canvas: fills the cell behind the logo/placeholder and
      ripples in the client's brand color on hover (driven by initPixelGrids). */
