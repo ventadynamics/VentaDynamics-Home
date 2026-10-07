@@ -126,7 +126,7 @@
     }
   }
   /* ---- Logo cloud / partners grid ---- */
-  .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
+  .logo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(10,10,10,0.12); border: 1px solid rgba(10,10,10,0.12); }
   .logo-cell { background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 40px 24px; min-height: 220px; position: relative; overflow: hidden; isolation: isolate; cursor: pointer; }
   .logo-cell.alt { background: #f7f7f9; }
   .logo-cell:focus-visible { outline: 2px solid #1b17ff; outline-offset: -2px; }
@@ -330,10 +330,7 @@
       <!-- Slot 1: PAVAGA — red brand ripple -->
       <div class="logo-cell alt" style="--logo-h:128px" data-colors="#c20f1b,#e63946,#8a0a12" data-partner="pavaga" role="button" tabindex="0" aria-expanded="false" aria-controls="partner-panel"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/pavaga.png" alt="PAVAGA" loading="lazy"></div>
       <div class="logo-cell" style="--logo-h:64px" data-colors="#004d1e,#0a7a37,#2f9c57" data-partner="letitbe" role="button" tabindex="0" aria-expanded="false" aria-controls="partner-panel"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/letitbe.png" alt="Let it be" loading="lazy"></div>
-      <!-- Slot 3: БДМУ — blue brand ripple -->
-      <div class="logo-cell alt" style="--logo-h:128px" data-colors="#46509b,#6b74bd,#e32428" data-partner="bsmu" role="button" tabindex="0" aria-expanded="false" aria-controls="partner-panel"><canvas class="pixel-canvas"></canvas><img src="./assets/logos/bsmu.png" alt="Студент БГМУ" loading="lazy"></div>
-      <span class="logo-plus" style="left:33.333%;">+</span>
-      <span class="logo-plus" style="left:66.666%;">+</span>
+      <span class="logo-plus" style="left:50%;">+</span>
     </div>
 
     <!-- Detail panel: expands on click, shows the selected partner's info.
@@ -377,25 +374,6 @@
           </div>
           <div class="partner-shots">
             <img src="./assets/mockups/letitbe.webp" alt="Let it be — экран меню" loading="lazy">
-          </div>
-        </div>
-
-        <div class="partner-detail" data-partner="bsmu">
-          <div class="partner-detail-text">
-            <div class="partner-cat">Мобильное приложение · iOS · Волонтёрский проект</div>
-            <h4>Студент БГМУ</h4>
-            <a class="partner-link" href="https://apps.apple.com/us/app/%D1%81%D1%82%D1%83%D0%B4%D0%B5%D0%BD%D1%82-%D0%B1%D0%B3%D0%BC%D1%83/id6809048316" target="_blank" rel="noopener">App Store ↗</a>
-            <p class="partner-desc">Приложение для студентов медуниверситета: расписание, оценки, деканат, оплаты — всё в одном месте и работает офлайн. Началось как помощь одному человеку — а за первую неделю разошлось по всему вузу.</p>
-            <div class="partner-feats-label">Что внутри</div>
-            <ul class="partner-feats">
-              <li>Парсинг расписания из PDF вуза в единую базу</li>
-              <li>Офлайн-режим: расписание работает без интернета и входа</li>
-              <li>Оценки со средним баллом, деканат с документами, оплаты</li>
-            </ul>
-            <p class="partner-result">Первая неделя в App Store — 3700+ установок. Версия для Android в тестировании.</p>
-          </div>
-          <div class="partner-shots">
-            <img src="./assets/mockups/bsmu.webp" alt="Студент БГМУ — расписание" loading="lazy">
           </div>
         </div>
         </div>
